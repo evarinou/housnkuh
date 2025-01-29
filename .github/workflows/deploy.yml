@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy via SFTP
 
 on:
   push:
@@ -10,32 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Schritt 1: Checkout den Code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Schritt 2: Installiere Node.js
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Schritt 3: Installiere Abhängigkeiten
       - name: Install dependencies
         run: npm install
 
-      # Schritt 4: Erstelle den Build
       - name: Build project
         run: npm run build
 
-      # Schritt 5: Deploye auf den Server
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@v4.1.0
+      - name: Deploy via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          REMOTE_PORT: 22
-          SOURCE: "build/"
-          TARGET: ${{ secrets.REMOTE_TARGET }}
-          ARGS: '-avz --delete -e "sftp -o Port=22"'
+          server: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}  # ODER ssh-key
+          server-dir: ${{ secrets.REMOTE_TARGET }}
+          local-dir: ./build/
+          port: 22
+          protocol: sftp
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Nur wenn SSH-Schlüssel verwendet wird
