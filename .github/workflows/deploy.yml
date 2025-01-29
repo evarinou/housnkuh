@@ -35,6 +35,6 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}       # Server-IP/Domain
           username: ${{ secrets.REMOTE_USER }}   # SSH-Benutzername
           key: ${{ secrets.SSH_PRIVATE_KEY }}    # Privater SSH-Schlüssel
-          port: 21                               # Port (22 für SSH/SFTP)
+          port: 22                               # Port (22 für SSH/SFTP)
           source: "build/*"                      # Lokaler Build-Ordner
           target: ${{ secrets.REMOTE_TARGET }}   # Zielverzeichnis auf dem Server
