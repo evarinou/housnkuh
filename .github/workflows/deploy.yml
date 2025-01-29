@@ -29,11 +29,13 @@ jobs:
         run: npm run build
 
       # Schritt 5: Deploye auf den Server
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@v4.1.0
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          SOURCE: "build/"  # Der Build-Ordner
-          TARGET: ${{ secrets.REMOTE_TARGET }}  # Zielverzeichnis auf dem Server
+    - name: Deploy to server
+  uses: easingthemes/ssh-deploy@v4.1.0
+  with:
+    SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+    REMOTE_USER: ${{ secrets.REMOTE_USER }}
+    REMOTE_PORT: 2222  # Alfahosting verwendet oft Port 2222 für SFTP/SSH
+    SOURCE: "build/"
+    TARGET: ${{ secrets.REMOTE_TARGET }}
+    ARGS: '-avz --delete -e "ssh -p 2222 -o IdentitiesOnly=yes"'
