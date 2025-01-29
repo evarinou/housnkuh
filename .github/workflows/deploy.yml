@@ -32,6 +32,6 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}  # ODER ssh-key
           server-dir: ${{ secrets.REMOTE_TARGET }}
           local-dir: ./build/
-          port: 22
+          port: 21
           protocol: sftp
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Nur wenn SSH-Schlüssel verwendet wird
