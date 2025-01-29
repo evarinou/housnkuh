@@ -35,7 +35,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          REMOTE_PORT: 22  # Alfahosting verwendet oft Port 2222 für SFTP/SSH
+          REMOTE_PORT: 22
           SOURCE: "build/"
           TARGET: ${{ secrets.REMOTE_TARGET }}
-          ARGS: '-avz --delete -e "ssh -p 2222 -o IdentitiesOnly=yes"'
+          ARGS: '-avz --delete -e "sftp -o Port=22"'
