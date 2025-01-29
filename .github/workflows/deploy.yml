@@ -1,0 +1,39 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  # Ändere dies, falls du einen anderen Branch verwendest
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Schritt 1: Checkout den Code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Schritt 2: Installiere Node.js
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # Passe die Version an, falls nötig
+
+      # Schritt 3: Installiere Abhängigkeiten
+      - name: Install dependencies
+        run: npm install
+
+      # Schritt 4: Erstelle den Build
+      - name: Build project
+        run: npm run build
+
+      # Schritt 5: Deploye auf den Server
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@v4.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          SOURCE: "build/"  # Der Build-Ordner
+          TARGET: ${{ secrets.REMOTE_TARGET }}  # Zielverzeichnis auf dem Server
