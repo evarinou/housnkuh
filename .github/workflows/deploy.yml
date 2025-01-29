@@ -1,37 +1,40 @@
-name: Deploy via SFTP
+name: Deploy via SCP/SFTP
 
 on:
   push:
     branches:
-      - main
+      - main  # Deploy nur beim Push auf den main-Branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Schritt 1: Code auschecken
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Schritt 2: Node.js installieren
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
+      # Schritt 3: Abhängigkeiten installieren
       - name: Install dependencies
         run: npm install
 
+      # Schritt 4: Build erstellen
       - name: Build project
         run: npm run build
 
-      - name: Deploy via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      # Schritt 5: Deploy mit SCP/SFTP
+      - name: Deploy to server
+        uses: appleboy/scp-action@v0.1.6
         with:
-          server: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          password: ${{ secrets.SFTP_PASSWORD }}  # ODER ssh-key
-          server-dir: ${{ secrets.REMOTE_TARGET }}
-          local-dir: ./build/
-          port: 21
-          protocol: sftp
-          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Nur wenn SSH-Schlüssel verwendet wird
+          host: ${{ secrets.REMOTE_HOST }}       # Server-IP/Domain
+          username: ${{ secrets.REMOTE_USER }}   # SSH-Benutzername
+          key: ${{ secrets.SSH_PRIVATE_KEY }}    # Privater SSH-Schlüssel
+          port: 21                               # Port (22 für SSH/SFTP)
+          source: "build/*"                      # Lokaler Build-Ordner
+          target: ${{ secrets.REMOTE_TARGET }}   # Zielverzeichnis auf dem Server
