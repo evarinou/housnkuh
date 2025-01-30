@@ -19,7 +19,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Öffnungszeiten</h3>
             <div className="space-y-2">
-              <p>24 Stunden täglich</p>
+              <p>Information folgt</p>
               <p>7 Tage die Woche</p>
             </div>
           </div>
