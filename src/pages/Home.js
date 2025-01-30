@@ -26,7 +26,7 @@ const Home = () => {
             <div className="text-blue-600 mb-4">
               <ShoppingBag size={32} />
             </div>
-            <h2 className="text-xl font-semibold mb-2">Jeden Tag Einkaufen</h2>
+            <h2 className="text-xl font-semibold mb-2">Jeden Tag EinkaufenTest</h2>
             <p className="text-gray-600">Kaufen Sie ein, wann es Ihnen passt.</p>
           </div>
 
