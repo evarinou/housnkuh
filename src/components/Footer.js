@@ -11,7 +11,7 @@ const Footer = () => {
             <div className="space-y-2">
               <p>Strauer Str. 15</p>
               <p>96317 Kronach</p>
-              <p>Tel: 0157 35711257</p>
+              <p>Tel: 0157/35711257</p>
               <p>E-Mail: evam.schaller@gmail.com</p>
             </div>
           </div>
