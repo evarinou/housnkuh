@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #e17564;  /* Neue Farbe für Coral */
+  --secondary: #123456;  /* Neue Farbe für Navy */
+  --white: #f0f0f0;  /* Neue Farbe für Weiß */
+}
+
 /* Basis-Styles als Ergänzung zu Tailwind */
 @layer base {
   body {
