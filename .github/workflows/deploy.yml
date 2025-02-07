@@ -3,7 +3,7 @@ name: Deploy via SCP/SFTP
 on:
   push:
     branches:
-      - main  # Deploy nur beim Push auf den main-Branch
+      - main  # Deploy nur beim Push auf den main Branch
 
 jobs:
   deploy:
