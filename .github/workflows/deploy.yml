@@ -39,5 +39,5 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}  # Passwort statt Schlüssel
           port: 22                               # Port (22 für SSH/SFTP)
           source: "build"                            # Lokaler Build-Ordner
-          target: ${{ secrets.REMOTE_TARGET }}   # geändert in /var/www/vhosts/yhe56tye.web140.alfahosting-server.de/httpdocs
+          target: ${{ secrets.REMOTE_TARGET }}   # geändert in /httpdocs test
           debug: true
