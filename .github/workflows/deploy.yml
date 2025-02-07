@@ -39,5 +39,5 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}  # Passwort statt Schlüssel
           port: 22                               # Port (22 für SSH/SFTP)
           source: "."                      # Lokaler Build-Ordner
-          target: ${{ secrets.REMOTE_TARGET }}   # Zielverzeichnis auf dem Server
+          target: ${{ secrets.REMOTE_TARGET }}   # geändert
           debug: true
