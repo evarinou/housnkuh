@@ -41,3 +41,5 @@ jobs:
           source: "build"                            # Lokaler Build-Ordner
           target: ${{ secrets.REMOTE_TARGET }}   # geändert in /httpdocs test
           debug: true
+          script: |
+          echo "DEBUG: INPUT_TARGET value inside container:"          echo "$INPUT_TARGET"
