@@ -33,14 +33,14 @@ jobs:
       # Schritt 5: Debug - Echo INPUT_TARGET (KORRIGIERT!)
       - name: Debug - Echo INPUT_TARGET
         uses: appleboy/ssh-action@master
+        env:
+          INPUT_TARGET: ${{ secrets.REMOTE_TARGET }}
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
           script: 'echo "DEBUG: INPUT_TARGET ist: $INPUT_TARGET"'
-          envs: # Umgebungsvariablen für diesen Schritt definieren!
-            INPUT_TARGET: ${{ secrets.REMOTE_TARGET }} # INPUT_TARGET HIER definieren!
 
       - name: Deploy to server
         uses: appleboy/scp-action@v0.1.6
