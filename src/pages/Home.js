@@ -27,7 +27,7 @@ const Home = () => {
               <ShoppingBag size={32} />
             </div>
             <h2 className="text-xl font-semibold mb-2">Jeden Tag Einkaufen</h2>
-            <p className="text-[var(--secondary)]">Kaufen Sie ein, wann es Ihnen passt.</p>
+            <p className="text-[var(--secondary)]">Kaufen blub Sie ein, wann es Ihnen passt.</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-lg p-6">
