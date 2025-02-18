@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Store, ShoppingBag, PackageSearch, Camera, Instagram, Box, Check, ArrowUp, Menu } from 'lucide-react';
+import { Store, ShoppingBag, PackageSearch, Box, Check, ArrowUp } from 'lucide-react';
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
