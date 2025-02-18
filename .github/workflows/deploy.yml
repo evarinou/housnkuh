@@ -32,16 +32,15 @@ jobs:
 
       # Schritt 5: Deploy mit SCP/SFTP
 
-
       - name: Debug - Echo INPUT_TARGET
-        uses: appleboy/scp-action@v0.1.6
+        uses: appleboy/ssh-action@master  # RICHTIGE ACTION FÜR SSH BEFEHLE!
         with:
           host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}   # SSH-Benutzername
-          password: ${{ secrets.SFTP_PASSWORD }}  # Passwort statt Schlüssel
+          username: ${{ secrets.REMOTE_USER }}  # SSH-Benutzername (konsistent mit Deploy-Schritt)
+          password: ${{ secrets.SFTP_PASSWORD }} # Passwort (konsistent mit Deploy-Schritt)
           port: 22 # or your SSH port
-          run: 'echo "DEBUG: INPUT_TARGET is: $INPUT_TARGET"'
-
+          script: 'echo "DEBUG: INPUT_TARGET ist: $INPUT_TARGET"' # RICHTIG: script:, NICHT run:
+      
       - name: Deploy to server
         uses: appleboy/scp-action@v0.1.6
         with:
