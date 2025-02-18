@@ -49,3 +49,4 @@ jobs:
           #target: ${{ secrets.REMOTE_TARGET }}
           target: "/var/www/vhosts/yhe56tye.web140.alfahosting-server.de/httpdocs"  # <--  ABSOLUTER PFAD als STRING!"
           debug: true
+          strip_components: 1
