@@ -45,6 +45,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
-          source: "build/index.html"  # <--  ÄNDERUNG: Spezifische Datei, kein Wildcard
-          target: ${{ secrets.REMOTE_TARGET }}
+          source: "build/*" 
+          #target: ${{ secrets.REMOTE_TARGET }}
+          target: "/var/www/vhosts/yhe56tye.web140.alfahosting-server.de/httpdocs"  # <--  ABSOLUTER PFAD als STRING!"
           debug: true
