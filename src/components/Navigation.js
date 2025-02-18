@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import logo from '../assets/logo.svg'; // Pfad anpassen, je nachdem, wo deine logo.svg liegt
+import logo from '../assets/logo.svg';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +27,9 @@ const Navigation = () => {
             </Link>
             <Link to="/rent" className="text-[var(--primary)] hover:text-[var(--secondary)]">
               Verkaufsfläche mieten
+            </Link>
+            <Link to="/pricing" className="text-[var(--primary)] hover:text-[var(--secondary)]">
+              Pricing
             </Link>
           </div>
 
@@ -63,6 +66,13 @@ const Navigation = () => {
               onClick={() => setIsOpen(false)}
             >
               Verkaufsfläche mieten
+            </Link>
+            <Link
+              to="/pricing"
+              className="block px-3 py-2 text-[var(--primary)] hover:text-[var(--secondary)]"
+              onClick={() => setIsOpen(false)}
+            >
+              Pricing
             </Link>
           </div>
         </div>
