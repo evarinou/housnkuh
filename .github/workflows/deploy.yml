@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
-          script: 'echo "DEBUG: REMOTE_TARGET ist: ${{ secrets.REMOTE_TARGET }}"' # DIREKTES EINSETZEN DES SECRETS!
+          script: 'echo "DEBUG: REMOTE_TARGET ist: ${{ secrets.REMOTE_TARGET }}"' # DIREKTES EItNSETZEN DES SECRETS!
 
       - name: Deploy to server
         uses: appleboy/scp-action@v0.1.6
