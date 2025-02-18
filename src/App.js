@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Home from './pages/Home';
-import Pricing from './pages/pricing'; // Achte auf die Kleinschreibung wegen deiner filename
+import Pricing from './pages/Pricing'; // Achte auf die Kleinschreibung wegen deiner filename
 import Footer from './components/Footer';
 
 function App() {
