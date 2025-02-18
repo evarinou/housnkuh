@@ -1,3 +1,5 @@
+//// filepath: /c:/Users/evams/github-Projekte/housnkuh/src/components/ui/card.js
+
 import React from 'react';
 
 export const Card = ({ children, className = '' }) => {

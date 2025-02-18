@@ -1,7 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Store, ShoppingBag, PackageSearch, Box, Check } from 'lucide-react';
+import { Store, ShoppingBag, PackageSearch, Camera, Instagram, Box, Check, ArrowUp, Menu } from 'lucide-react';
+
+const ScrollToTop = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.pageYOffset > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  return isVisible ? (
+    <button
+      onClick={scrollToTop}
+      className="fixed bottom-8 right-8 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-200"
+    >
+      <ArrowUp className="w-6 h-6" />
+    </button>
+  ) : null;
+};
+
+const SubNavigation = ({ sections }) => {
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = element.offsetTop - 150; // Account for sticky header
+      window.scrollTo({
+        top: offset,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  return (
+    <div className="sticky top-16 bg-white shadow-sm z-10">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex gap-8 p-4 overflow-x-auto">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => scrollToSection(section.id)}
+              className="text-gray-600 hover:text-blue-500 whitespace-nowrap transition-colors"
+            >
+              {section.title}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PricingCard = ({ title, price, features, icon: Icon, highlight }) => (
   <Card className={`w-full transition-all duration-200 hover:shadow-lg ${highlight ? 'border-blue-500 border-2' : ''}`}>
@@ -33,6 +97,12 @@ const PricingCard = ({ title, price, features, icon: Icon, highlight }) => (
 );
 
 const PricingSection = () => {
+  const sections = [
+    { id: 'basis-pakete', title: 'Basis-Pakete' },
+    { id: 'zusatzservices', title: 'Zusätzliche Services' },
+    { id: 'kontakt', title: 'Kontakt' },
+  ];
+
   const packages = [
     {
       title: "Verkaufsblock A-Lage",
@@ -93,38 +163,43 @@ const PricingSection = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-12">
-        <h2 className="text-3xl font-bold text-center mb-4">Verkaufsflächen Mieten</h2>
-        <div className="flex justify-center gap-2 mb-8">
-          <Badge variant="secondary" className="text-sm">5% Rabatt bei 6 Monaten</Badge>
-          <Badge variant="secondary" className="text-sm">10% Rabatt bei 12 Monaten</Badge>
-          <Badge variant="secondary" className="text-sm">Nur 5% Provision vom Umsatz</Badge>
+    <>
+      <SubNavigation sections={sections} />
+      <div className="max-w-6xl mx-auto p-6 pt-24">
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold text-center mb-4">Verkaufsflächen Mieten</h2>
+          <div className="flex justify-center gap-2 mb-8 flex-wrap">
+            <Badge variant="secondary" className="text-sm">5% Rabatt bei 6 Monaten</Badge>
+            <Badge variant="secondary" className="text-sm">10% Rabatt bei 12 Monaten</Badge>
+            <Badge variant="secondary" className="text-sm">Nur 5% Provision vom Umsatz</Badge>
+          </div>
         </div>
-      </div>
 
-      <div className="space-y-6">
-        {packages.map((pkg, index) => (
-          <PricingCard key={index} {...pkg} />
-        ))}
-      </div>
-
-      <div className="mt-8">
-        <h3 className="text-xl font-semibold mb-6">Zusätzliche Services</h3>
-        <div className="space-y-6">
-          {additionalServices.map((service, index) => (
-            <PricingCard key={index} {...service} />
+        <div id="basis-pakete" className="space-y-6">
+          <h3 className="text-2xl font-semibold mb-6">Basis-Pakete</h3>
+          {packages.map((pkg, index) => (
+            <PricingCard key={index} {...pkg} />
           ))}
         </div>
-      </div>
 
-      <div className="mt-12 text-center bg-gray-50 p-6 rounded-lg">
-        <h3 className="text-lg font-semibold mb-2">Interesse? Kontaktieren Sie uns!</h3>
-        <p className="text-gray-600">
-          Wir beraten Sie gerne bei der Auswahl der optimalen Verkaufsfläche
-        </p>
+        <div id="zusatzservices" className="mt-16">
+          <h3 className="text-2xl font-semibold mb-6">Zusätzliche Services</h3>
+          <div className="space-y-6">
+            {additionalServices.map((service, index) => (
+              <PricingCard key={index} {...service} />
+            ))}
+          </div>
+        </div>
+
+        <div id="kontakt" className="mt-16 text-center bg-gray-50 p-6 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">Interesse? Kontaktieren Sie uns!</h3>
+          <p className="text-gray-600">
+            Wir beraten Sie gerne bei der Auswahl der optimalen Verkaufsfläche
+          </p>
+        </div>
       </div>
-    </div>
+      <ScrollToTop />
+    </>
   );
 };
 

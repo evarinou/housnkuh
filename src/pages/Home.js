@@ -1,51 +1,159 @@
 import React from 'react';
-import { ShoppingBag, MapPin, Users } from 'lucide-react';
+import { Calendar, Clock, ShoppingBag, Users, MapPin, Heart } from 'lucide-react';
+import NewsletterSignup from '../components/NewsletterSignup';
+
+// Feature Card Component mit Animation
+const FeatureCard = ({ icon: Icon, title, description }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+      <div className="flex justify-center text-[var(--primary)] mb-4 transition-transform duration-300 hover:scale-110">
+        <Icon size={32} className="transform transition-all duration-500 hover:rotate-12" />
+      </div>
+      <h3 className="text-xl font-semibold mb-2 text-[var(--secondary)]">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </div>
+  );
+};
+
+// List Item mit Animation
+const AnimatedListItem = ({ icon: Icon, children }) => {
+  return (
+    <li className="flex items-center transform transition-all duration-300 hover:translate-x-2">
+      <Icon className="w-5 h-5 text-[var(--primary)] mr-2" />
+      <span>{children}</span>
+    </li>
+  );
+};
+
+// History Section mit verbessertem Design – definiere diese Komponente außerhalb von Home
+const HistorySection = () => {
+  return (
+    <section className="max-w-4xl mx-auto px-4 py-12">
+      <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-8 shadow-lg transform transition-all duration-300 hover:shadow-xl">
+        <h2 className="text-3xl font-bold text-[var(--secondary)] mb-6 text-center">
+          Die Geschichte hinter dem Namen
+        </h2>
+        <div className="prose prose-lg mx-auto">
+          <p className="text-gray-600 mb-4 leading-relaxed">
+            Die "Housnkuh" ist eines der bedeutendsten Symbole der Kronacher Geschichte. Während des 
+            Dreißigjährigen Krieges versuchten schwedische Truppen, die Stadt durch eine Belagerung zur 
+            Aufgabe zu zwingen. Ihr Plan war es, die Festung Rosenberg und die Stadt auszuhungern.
+          </p>
+          <p className="text-gray-600 mb-4 leading-relaxed">
+            Die Kronacher aber überlisteten die Belagerer: Sie zeigten den Schweden demonstrativ einen 
+            wohlgenährten Hasen – die sogenannte "Housnkuh" – auf den Festungsmauern. Diese List 
+            suggerierte den Feinden, dass die Stadt noch über reichlich Nahrungsvorräte verfügte.
+          </p>
+          <p className="text-gray-600 leading-relaxed">
+            Wie die historische Housnkuh für den Einfallsreichtum und Zusammenhalt der Kronacher steht, 
+            so steht unser Marktplatz für Innovation und die Stärke unserer regionalen Gemeinschaft.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const Home = () => {
+  const features = [
+    {
+      icon: Clock,
+      title: "Fast durchgehend Einkaufen",
+      description: "Dank modernster Selbstbedienungstechnologie können Sie einkaufen, wann es Ihnen passt."
+    },
+    {
+      icon: MapPin,
+      title: "100% Regional",
+      description: "Entdecken Sie die Vielfalt unserer Region – direkt von lokalen Erzeugern zu Ihnen."
+    },
+    {
+      icon: Heart,
+      title: "Heimat im Herzen",
+      description: "Unterstützen Sie lokale Produzenten und genießen Sie die Qualität aus Ihrer Region."
+    }
+  ];
+
   return (
-    <div className="space-y-16">
-      {/* Hero Section */}
-      <section className="bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-[var(--primary)] sm:text-5xl">
-              Regionale Produkte.
-              <span className="block text-[var(--secondary)]">Rund um die Uhr.</span>
+    <div className="space-y-16 pb-16">
+      {/* Hero Section mit Animation */}
+      <section className="bg-gradient-to-b from-gray-50 to-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center animate-fadeIn">
+            <h1 className="text-4xl font-bold text-[var(--secondary)] sm:text-5xl mb-6 animate-slideDown">
+              Willkommen bei housnkuh
             </h1>
-            <p className="mt-6 text-xl text-[var(--secondary)]">
-              Entdecken Sie die Vielfalt regionaler Produkte aus Kronach und Umgebung.
+            <p className="text-2xl text-[var(--primary)] font-semibold animate-slideUp">
+              Ihr innovativer Marktplatz für regionale Produkte in Kronach
+            </p>
+            <p className="mt-4 text-xl text-gray-600 animate-fadeIn">
+              Eröffnung im Frühsommer 2025
             </p>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Concept Explanation mit Animation */}
+      <section className="max-w-4xl mx-auto px-4 transform transition-all duration-500 hover:scale-105">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-[var(--secondary)] mb-6">Was ist housnkuh?</h2>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            housnkuh wird Ihr neuer Lieblingsort für regionale Spezialitäten und Produkte aus Kronach und Umgebung. 
+            Im (bald) modern gestalteten Laden in der Strauer Straße 15 werden lokale Erzeuger und 
+            Genießer zusammengebracht – und das beinahe rund um die Uhr!
+          </p>
+        </div>
+      </section>
+
+      <HistorySection />
+
+      {/* Key Features mit Animation */}
+      <section className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="text-[var(--secondary)] mb-4">
-              <ShoppingBag size={32} />
-            </div>
-            <h2 className="text-xl font-semibold mb-2">Jeden Tag Einkaufen</h2>
-            <p className="text-[var(--secondary)]">Kaufen blub Sie ein, wann es Ihnen passt.</p>
+          {features.map((feature, index) => (
+            <FeatureCard key={index} {...feature} />
+          ))}
+        </div>
+      </section>
+
+      {/* Coming Soon mit Animation */}
+      <section className="max-w-4xl mx-auto px-4 text-center">
+        <h2 className="text-3xl font-bold text-[var(--secondary)] mb-6">Das erwartet Sie</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+          <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-lg shadow-lg transform transition-all duration-300 hover:shadow-xl">
+            <h3 className="text-xl font-semibold mb-4">Für unsere Kunden</h3>
+            <ul className="space-y-3">
+              <AnimatedListItem icon={ShoppingBag}>
+                Regionale Spezialitäten rund um die Uhr
+              </AnimatedListItem>
+              <AnimatedListItem icon={MapPin}>
+                Zentrale Lage in der Strauer Straße 15
+              </AnimatedListItem>
+              <AnimatedListItem icon={Heart}>
+                Direkter Kontakt zu lokalen Erzeugern
+              </AnimatedListItem>
+            </ul>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="text-[var(--secondary)] mb-4">
-              <MapPin size={32} />
-            </div>
-            <h2 className="text-xl font-semibold mb-2">100% Regional</h2>
-            <p className="text-[var(--secondary)]">Alle Produkte aus Ihrer Region.</p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="text-[var(--secondary)] mb-4">
-              <Users size={32} />
-            </div>
-            <h2 className="text-xl font-semibold mb-2">Direkt vom Erzeuger</h2>
-            <p className="text-[var(--secondary)]">Unterstützen Sie lokale Produzenten.</p>
+          <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-lg shadow-lg transform transition-all duration-300 hover:shadow-xl">
+            <h3 className="text-xl font-semibold mb-4">Für Direktvermarkter</h3>
+            <ul className="space-y-3">
+              <AnimatedListItem icon={Users}>
+                Erreichen Sie neue Kundengruppen
+              </AnimatedListItem>
+              <AnimatedListItem icon={Clock}>
+                Verkaufen Sie rund um die Uhr
+              </AnimatedListItem>
+              <AnimatedListItem icon={Calendar}>
+                Flexible Mietmodelle & faire Konditionen
+              </AnimatedListItem>
+            </ul>
           </div>
         </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="max-w-2xl mx-auto px-4">
+        <NewsletterSignup />
       </section>
     </div>
   );
