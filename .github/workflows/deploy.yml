@@ -29,17 +29,24 @@ jobs:
       # Schritt 4: Build erstellen
       - name: Build project
         run: npm run build
+        
+      - name: Debug - Echo INPUT_TARGET
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
+          port: 22 # or your SSH port
+          script: echo "DEBUG: INPUT_TARGET is: $INPUT_TARGET"
 
-      # Schritt 5: Deploy mit SCP/SFTP
       - name: Deploy to server
         uses: appleboy/scp-action@v0.1.6
         with:
-          host: ${{ secrets.REMOTE_HOST }}       # Server-IP/Domain
-          username: ${{ secrets.REMOTE_USER }}   # SSH-Benutzername
-          password: ${{ secrets.SFTP_PASSWORD }}  # Passwort statt Schlüssel
-          port: 22                               # Port (22 für SSH/SFTP)
-          source: "build"                            # Lokaler Build-Ordner
-          target: ${{ secrets.REMOTE_TARGET }}   # geändert in /httpdocs test
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
+          port: 22
+          source: build
+          target: ${{ secrets.REMOTE_TARGET }}
           debug: true
-          script: |
-          echo "DEBUG: INPUT_TARGET value inside container:"          echo "$INPUT_TARGET"
+          strip_components: 0
