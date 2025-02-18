@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Store, ShoppingBag, PackageSearch, Camera, Instagram, Box, Check } from 'lucide-react';
+import { Store, ShoppingBag, PackageSearch, Box, Check } from 'lucide-react';
 
 const PricingCard = ({ title, price, features, icon: Icon, highlight }) => (
   <Card className={`w-full transition-all duration-200 hover:shadow-lg ${highlight ? 'border-blue-500 border-2' : ''}`}>
