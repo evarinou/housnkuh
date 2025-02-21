@@ -4,7 +4,25 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Quicksand', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      colors: {
+        primary: {
+          DEFAULT: '#e17564',
+        },
+        secondary: {
+          DEFAULT: '#09122c',
+        }
+      },
+      fontWeight: {
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+      }
+    },
   },
   plugins: [],
 }

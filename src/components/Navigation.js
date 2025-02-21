@@ -17,59 +17,74 @@ const Navigation = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Optimiert für Quicksand */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/vendors" className="text-[var(--primary)] hover:text-[var(--secondary)]">
+            <Link 
+              to="/vendors" 
+              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
+            >
               Direktvermarkter
             </Link>
-            <Link to="/location" className="text-[var(--primary)] hover:text-[var(--secondary)]">
+            <Link 
+              to="/location" 
+              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
+            >
               Standort
             </Link>
-            <Link to="/rent" className="text-[var(--primary)] hover:text-[var(--secondary)]">
+            <Link 
+              to="/rent" 
+              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
+            >
               Verkaufsfläche mieten
             </Link>
-            <Link to="/pricing" className="text-[var(--primary)] hover:text-[var(--secondary)]">
+            <Link 
+              to="/pricing" 
+              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
+            >
               Pricing
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
+            <button 
+              onClick={() => setIsOpen(!isOpen)} 
+              className="focus:outline-none text-primary hover:text-secondary transition-colors duration-200"
+            >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </div>
       
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - Optimiert für Quicksand */}
       {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden bg-white">
+          <div className="px-2 pt-2 pb-3 space-y-1">
             <Link
               to="/vendors"
-              className="block px-3 py-2 text-[var(--primary)] hover:text-[var(--secondary)]"
+              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
               onClick={() => setIsOpen(false)}
             >
               Direktvermarkter
             </Link>
             <Link
               to="/location"
-              className="block px-3 py-2 text-[var(--primary)] hover:text-[var(--secondary)]"
+              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
               onClick={() => setIsOpen(false)}
             >
               Standort
             </Link>
             <Link
               to="/rent"
-              className="block px-3 py-2 text-[var(--primary)] hover:text-[var(--secondary)]"
+              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
               onClick={() => setIsOpen(false)}
             >
               Verkaufsfläche mieten
             </Link>
             <Link
               to="/pricing"
-              className="block px-3 py-2 text-[var(--primary)] hover:text-[var(--secondary)]"
+              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
               onClick={() => setIsOpen(false)}
             >
               Pricing

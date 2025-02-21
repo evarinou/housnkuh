@@ -1,28 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #e17564;  /* Neue Farbe für Coral */
-  --secondary: #123456;  /* Neue Farbe für Navy */
-  --white: #f0f0f0;  /* Neue Farbe für Weiß */
+  --primary: #e17564;
+  --secondary: #09122c;
+  --white: #ffffff;
 }
 
-/* Basis-Styles als Ergänzung zu Tailwind */
 @layer base {
-  body {
+  html {
     @apply antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
+    font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
   }
 
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
+  /* Optimierte Typografie für Quicksand */
+  h1 {
+    @apply text-4xl font-bold md:text-5xl tracking-tight;
+  }
+
+  h2 {
+    @apply text-3xl font-bold md:text-4xl tracking-tight;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold md:text-3xl tracking-tight;
+  }
+
+  h4 {
+    @apply text-xl font-semibold md:text-2xl;
+  }
+
+  p {
+    @apply font-normal leading-relaxed;
   }
 }
 
+/* Nützliche Typografie-Utility-Klassen */
+@layer components {
+  .title-large {
+    @apply text-4xl font-bold tracking-tight md:text-5xl;
+  }
+
+  .title-medium {
+    @apply text-3xl font-bold tracking-tight md:text-4xl;
+  }
+
+  .title-small {
+    @apply text-2xl font-semibold tracking-tight md:text-3xl;
+  }
+
+  .body-large {
+    @apply text-lg font-medium leading-relaxed;
+  }
+
+  .body-medium {
+    @apply text-base leading-relaxed;
+  }
+
+  .body-small {
+    @apply text-sm leading-relaxed;
+  }
+}
+
+/* Bestehende Animationen beibehalten */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
