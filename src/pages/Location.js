@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, Clock, Phone, Mail, Car, Bus } from 'lucide-react';
+import LocationMap from './LocationMap';
 
 const LocationFeature = ({ icon: Icon, title, children }) => (
   <div className="flex items-start">
@@ -44,18 +45,16 @@ const Location = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Map Section */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
-            <div className="h-96 bg-gray-200 flex items-center justify-center">
-              <MapPin size={48} className="text-[var(--primary)]" />
-              <span className="ml-2 text-gray-500">Karte wird geladen...</span>
-            </div>
-          </div>
+          <LocationMap />
           
           {/* Info Section */}
           <div className="bg-white rounded-lg shadow-lg p-8 space-y-6">
             <LocationFeature icon={MapPin} title="Adresse">
               <p className="text-gray-600">Strauer Str. 15</p>
               <p className="text-gray-600">96317 Kronach</p>
+              <p className="text-sm text-gray-500 mt-2">
+                Hinweis: Der Laden ist über eine Treppe erreichbar
+              </p>
             </LocationFeature>
             
             <LocationFeature icon={Clock} title="Öffnungszeiten">

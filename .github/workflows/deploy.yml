@@ -1,4 +1,4 @@
-name: Deploy via SCP/SFTP
+name: Deploy Frontend and Backend
 
 on:
   push:
@@ -20,21 +20,25 @@ jobs:
         with:
           node-version: 18
 
-      # Schritt 3: Abhängigkeiten installieren
-      - name: Install Dependencies
+      # Schritt 3: Frontend-Abhängigkeiten installieren
+      - name: Install Frontend Dependencies
         run: |
           npm install
           npm install --save-dev @babel/plugin-proposal-private-property-in-object
 
-      # Schritt 4: Build erstellen
-      - name: Build project
+      # Schritt 4: Backend-Abhängigkeiten installieren
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm install
+
+      # Schritt 5: Frontend-Build erstellen
+      - name: Build Frontend
         run: npm run build
 
-
-      # Schritt 5: Debug
-      - name: Deploy to server
+      # Schritt 6: Frontend deployen
+      - name: Deploy Frontend to server
         uses: appleboy/scp-action@v0.1.6
-        if: true
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
@@ -42,5 +46,36 @@ jobs:
           port: 22
           source: "build/*" 
           target: ${{ secrets.REMOTE_TARGET }}
-          debug: true
           strip_components: 1
+
+      # Schritt 7: Backend deployen
+      - name: Deploy Backend to server
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 22
+          source: "backend/*" 
+          target: "${{ secrets.REMOTE_TARGET }}/backend"
+          strip_components: 1
+
+      # Schritt 8: Backend-Service neustarten
+      - name: Restart Backend Service
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 22
+          script: |
+            cd ${{ secrets.REMOTE_TARGET }}/backend
+            npm install
+            # PM2 verwenden, falls installiert
+            if command -v pm2 &> /dev/null; then
+              pm2 restart housnkuh-newsletter || pm2 start server.js --name housnkuh-newsletter
+            # Ansonsten mit nohup im Hintergrund starten
+            else
+              pkill -f "node server.js" || true
+              nohup node server.js > newsletter.log 2>&1 &
+            fi
