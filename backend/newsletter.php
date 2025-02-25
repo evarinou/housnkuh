@@ -1,6 +1,10 @@
 <?php
-// Lade Konfiguration
-require_once 'config.php';
+// Direkte Datenbankeinstellungen
+$host = '127.0.0.1';
+$port = 3307;
+$database = 'yhe56tye_housnkuh';
+$username = 'yhe56tye_eva';
+$password = 'SherlockHolmes2!'; // Ersetzen Sie dies mit Ihrem Passwort
 
 // CORS-Header setzen
 header('Access-Control-Allow-Origin: *');
@@ -35,12 +39,19 @@ if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 // MySQL-Verbindung herstellen
 try {
-    $db = new PDO(
-        "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']}", 
-        $dbConfig['username'], 
-        $dbConfig['password']
-    );
+    $db = new PDO("mysql:host=$host;port=$port;dbname=$database", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Tabelle erstellen falls nicht vorhanden
+    $db->exec("
+        CREATE TABLE IF NOT EXISTS newsletter (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            type ENUM('customer', 'vendor') NOT NULL,
+            subscribedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            active BOOLEAN DEFAULT TRUE
+        )
+    ");
     
     // Prüfen, ob die E-Mail bereits existiert
     $stmt = $db->prepare("SELECT id FROM newsletter WHERE email = ?");

@@ -1,12 +1,19 @@
 <?php
-// Lade Konfiguration
-require_once 'config.php';
+// Direkte Datenbankeinstellungen
+$host = '127.0.0.1';
+$port = 3307;
+$database = 'yhe56tye_housnkuh';
+$username = 'yhe56tye_eva';
+$password = 'SherlockHolmes2!'; // Ersetzen Sie dies mit Ihrem Passwort
+
+// Admin-Passwort
+$admin_password = 'admin123'; // Ändern Sie dies zu einem sicheren Passwort
 
 session_start();
 
 // Login-Verarbeitung
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
-    if ($_POST['password'] === $adminConfig['password']) {
+    if ($_POST['password'] === $admin_password) {
         $_SESSION['admin_authenticated'] = true;
     } else {
         $error = 'Falsches Passwort';
@@ -22,13 +29,13 @@ if (isset($_POST['logout'])) {
 
 // Datenbankverbindung herstellen
 function connectToDatabase() {
-    global $dbConfig;
+    global $host, $port, $database, $username, $password;
     
     try {
         $pdo = new PDO(
-            "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']}", 
-            $dbConfig['username'], 
-            $dbConfig['password']
+            "mysql:host=$host;port=$port;dbname=$database", 
+            $username, 
+            $password
         );
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
@@ -239,10 +246,10 @@ if (isset($_SESSION['admin_authenticated'])) {
         
         <div class="info">
             <p><strong>Konfiguration:</strong> 
-               Datenbank: <?php echo $dbConfig['dbname']; ?> | 
-               Host: <?php echo $dbConfig['host']; ?> | 
-               Port: <?php echo $dbConfig['port']; ?> | 
-               Benutzer: <?php echo $dbConfig['username']; ?>
+               Datenbank: <?php echo $database; ?> | 
+               Host: <?php echo $host; ?> | 
+               Port: <?php echo $port; ?> | 
+               Benutzer: <?php echo $username; ?>
             </p>
         </div>
         
