@@ -7,6 +7,12 @@ const NewsletterSignup = () => {
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
   const [errorMessage, setErrorMessage] = useState('');
 
+  // API-Pfad bestimmen basierend auf der Umgebung
+  const getApiUrl = () => {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    return isLocalhost ? 'http://localhost:5000/api/newsletter/subscribe' : '/api/newsletter.php';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
@@ -33,14 +39,22 @@ const NewsletterSignup = () => {
         body: formData,
       });
       
-      const data = await response.json();
-      
-      if (data.success) {
-        setStatus('success');
-        setEmail('');
-      } else {
+      // Versuche, die Antwort zu parsen
+      try {
+        const data = await response.json();
+        
+        if (data.success) {
+          setStatus('success');
+          setEmail('');
+        } else {
+          setStatus('error');
+          setErrorMessage(data.message || 'Ein Fehler ist aufgetreten.');
+        }
+      } catch (jsonError) {
+        // Fehler beim JSON-Parsing
+        console.error('JSON Parsing error:', jsonError);
         setStatus('error');
-        setErrorMessage(data.message || 'Ein Fehler ist aufgetreten.');
+        setErrorMessage('Fehler bei der Verarbeitung der Serverantwort.');
       }
     } catch (error) {
       setStatus('error');
@@ -118,15 +132,15 @@ const NewsletterSignup = () => {
       )}
       
       {status === 'error' && (
-        <div className="mt-4 p-2 bg-red-600 text-white rounded-lg">
+        <div className="mt-4 p-4 bg-red-600 text-white rounded-lg">
           {errorMessage}
         </div>
       )}
       
-      {/* Hinweis nur im lokalen Entwicklungsmodus */}
-      {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && status !== 'success' && (
+      {/* Debug-Informationen - nur im lokalen Modus oder temporär anzeigen */}
+      {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
         <div className="mt-4 p-2 bg-yellow-600 text-white rounded-lg text-sm">
-          Lokaler Entwicklungsmodus: Daten werden nicht gespeichert
+          Lokaler Entwicklungsmodus: Daten werden simuliert
         </div>
       )}
     </div>
