@@ -60,22 +60,12 @@ jobs:
           target: "${{ secrets.REMOTE_TARGET }}/backend"
           strip_components: 1
 
-      # Schritt 8: Backend-Service neustarten
-      - name: Restart Backend Service
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: 22
-          script: |
-            cd ${{ secrets.REMOTE_TARGET }}/backend
-            npm install
-            # PM2 verwenden, falls installiert
-            if command -v pm2 &> /dev/null; then
-              pm2 restart housnkuh-newsletter || pm2 start server.js --name housnkuh-newsletter
-            # Ansonsten mit nohup im Hintergrund starten
-            else
-              pkill -f "node server.js" || true
-              nohup node server.js > newsletter.log 2>&1 &
-            fi
+      # Schritt 8: Starte Backend-Service manuell
+      - name: Manual Backend Start Instructions
+        run: |
+          echo "Backend wurde auf den Server kopiert."
+          echo "Bitte starten Sie das Backend manuell mit:"
+          echo "1. SSH-Verbindung zum Server herstellen"
+          echo "2. 'cd ${{ secrets.REMOTE_TARGET }}/backend' ausführen"
+          echo "3. Falls Node.js im PATH verfügbar: 'node server.js &' ausführen"
+          echo "4. Alternativ mit vollem Pfad: '/pfad/zu/node server.js &' ausführen"
