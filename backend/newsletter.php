@@ -36,7 +36,7 @@ if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 // MySQL-Verbindung herstellen
 try {
     $db = new PDO(
-        "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}", 
+        "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']}", 
         $dbConfig['username'], 
         $dbConfig['password']
     );

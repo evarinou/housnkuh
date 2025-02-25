@@ -13,17 +13,22 @@ const NewsletterSignup = () => {
     setErrorMessage('');
     
     try {
-      // API-URL basierend auf der Umgebung
-      const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost/newsletter.php'  // Lokale Entwicklung
-        : '/newsletter.php';                 // Produktionsumgebung
+      // Im lokalen Entwicklungsmodus simulieren wir einfach den Erfolg
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Simulierte Antwort für lokale Entwicklung
+        setTimeout(() => {
+          setStatus('success');
+          setEmail('');
+        }, 1000);
+        return;
+      }
       
-      // Echten API-Call durchführen
+      // Auf dem Server: Echten API-Call durchführen
       const formData = new FormData();
       formData.append('email', email);
       formData.append('type', type);
       
-      const response = await fetch(apiUrl, {
+      const response = await fetch('/newsletter.php', {
         method: 'POST',
         body: formData,
       });
@@ -115,6 +120,13 @@ const NewsletterSignup = () => {
       {status === 'error' && (
         <div className="mt-4 p-2 bg-red-600 text-white rounded-lg">
           {errorMessage}
+        </div>
+      )}
+      
+      {/* Hinweis nur im lokalen Entwicklungsmodus */}
+      {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && status !== 'success' && (
+        <div className="mt-4 p-2 bg-yellow-600 text-white rounded-lg text-sm">
+          Lokaler Entwicklungsmodus: Daten werden nicht gespeichert
         </div>
       )}
     </div>

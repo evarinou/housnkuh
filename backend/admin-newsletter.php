@@ -26,7 +26,7 @@ function connectToDatabase() {
     
     try {
         $pdo = new PDO(
-            "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}", 
+            "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']}", 
             $dbConfig['username'], 
             $dbConfig['password']
         );
@@ -241,6 +241,7 @@ if (isset($_SESSION['admin_authenticated'])) {
             <p><strong>Konfiguration:</strong> 
                Datenbank: <?php echo $dbConfig['dbname']; ?> | 
                Host: <?php echo $dbConfig['host']; ?> | 
+               Port: <?php echo $dbConfig['port']; ?> | 
                Benutzer: <?php echo $dbConfig['username']; ?>
             </p>
         </div>

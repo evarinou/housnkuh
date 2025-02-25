@@ -22,8 +22,8 @@ function loadEnv($path) {
 }
 
 // Ermittle die Umgebung (lokal oder Produktion)
-$isLocalDevelopment = strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || 
-                      strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false;
+$isLocalDevelopment = strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false || 
+                     strpos($_SERVER['HTTP_HOST'] ?? '', '127.0.0.1') !== false;
 
 // Lade die entsprechende .env Datei
 $envPath = $isLocalDevelopment 
@@ -35,6 +35,7 @@ loadEnv($envPath);
 // Datenbank-Konfiguration
 $dbConfig = [
     'host' => getenv('DB_HOST') ?: 'localhost',
+    'port' => getenv('DB_PORT') ?: '3307',
     'dbname' => getenv('DB_NAME') ?: 'housnkuh',
     'username' => getenv('DB_USER') ?: 'root',
     'password' => getenv('DB_PASSWORD') ?: '',
