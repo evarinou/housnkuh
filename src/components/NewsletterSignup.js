@@ -13,15 +13,19 @@ const NewsletterSignup = () => {
     setErrorMessage('');
     
     try {
-      // Echten API-Call durchführen
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('type', type);
       
-      const response = await fetch('/newsletter.php', {
-        method: 'POST',
-        body: formData,
+      // API-URL basierend auf der Umgebung
+      const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost/newsletter.php'  // Lokale Entwicklung
+      : '/newsletter.php';                 // Produktionsumgebung
+
+      // Dann im fetch verwenden
+      const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: formData,
       });
+      
+      
       
       const data = await response.json();
       

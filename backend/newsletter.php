@@ -1,4 +1,7 @@
 <?php
+// Lade Konfiguration
+require_once 'config.php';
+
 // CORS-Header setzen
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -31,13 +34,12 @@ if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 // MySQL-Verbindung herstellen
-$host = 'localhost'; // oder was bei Ihnen funktioniert hat
-$dbname = 'yhe56tye_housnkuh';
-$username = 'yhe56tye_eva';
-$password = 'IHR_KORREKTES_PASSWORT'; // Ersetzen Sie dies mit Ihrem Passwort
-
 try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $db = new PDO(
+        "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']}", 
+        $dbConfig['username'], 
+        $dbConfig['password']
+    );
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Prüfen, ob die E-Mail bereits existiert
@@ -59,6 +61,7 @@ try {
         echo json_encode(['success' => false, 'message' => 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.']);
     }
 } catch (PDOException $e) {
+    error_log('Newsletter error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 ?>
