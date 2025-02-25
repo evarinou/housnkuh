@@ -59,8 +59,20 @@ jobs:
           source: "backend/*" 
           target: "${{ secrets.REMOTE_TARGET }}/backend"
           strip_components: 1
+      
+      # NEUER SCHRITT: Newsletter PHP-Datei in Root kopieren
+      - name: Deploy newsletter.php to web root
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 22
+          source: "backend/newsletter.php" 
+          target: "${{ secrets.REMOTE_TARGET }}"
+          strip_components: 1
 
-      # Schritt 8: Starte Backend-Service manuell
+      # Starte Backend-Service manuell
       - name: Manual Backend Start Instructions
         run: |
           echo "Backend wurde auf den Server kopiert."
