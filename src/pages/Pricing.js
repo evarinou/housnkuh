@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Store, Box, PackageSearch, ArrowUp, Info, Mail } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import RentalRequestForm from '../components/RentalRequestForm';
 
 // ScrollToTop Komponente
