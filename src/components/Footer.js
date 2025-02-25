@@ -47,14 +47,6 @@ const Footer = () => {
                   Datenschutz
                 </Link>
               </p>
-              <p>
-                <Link 
-                  to="/agb" 
-                  className="hover:text-[var(--primary)] transition-colors duration-200"
-                >
-                  AGB
-                </Link>
-              </p>
             </nav>
           </div>
 

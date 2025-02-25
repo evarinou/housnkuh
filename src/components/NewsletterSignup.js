@@ -8,10 +8,10 @@ const NewsletterSignup = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   // API-Pfad bestimmen basierend auf der Umgebung
-  const getApiUrl = () => {
+/*  const getApiUrl = () => {
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     return isLocalhost ? 'http://localhost:5000/api/newsletter/subscribe' : '/api/newsletter.php';
-  };
+  };*/
 
   const handleSubmit = async (e) => {
     e.preventDefault();
