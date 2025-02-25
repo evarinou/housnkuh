@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Store, Box, PackageSearch, ArrowUp, Info } from 'lucide-react';
+import { Store, Box, PackageSearch, ArrowUp, Info, Mail } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import RentalRequestForm from '../components/RentalRequestForm';
 
 // ScrollToTop Komponente
 const ScrollToTop = () => {
@@ -27,7 +29,7 @@ const ScrollToTop = () => {
 };
 
 // PricingCard Komponente
-const PricingCard = ({ title, price, features, icon: Icon, highlight, description, minDuration }) => (
+const PricingCard = ({ title, price, features, icon: Icon, highlight, description, minDuration, spaceType, onRentClick }) => (
   <Card className={`w-full transition-all duration-200 hover:shadow-lg ${
     highlight ? 'border-[#e17564] border-2 relative overflow-visible' : ''
   }`}>
@@ -65,11 +67,14 @@ const PricingCard = ({ title, price, features, icon: Icon, highlight, descriptio
           </div>
         ))}
       </div>
-      <button className={`w-full mt-6 py-3 px-4 rounded-lg transition-all duration-200 font-semibold ${
-        highlight 
-          ? 'bg-[#e17564] text-white hover:bg-opacity-90 hover:transform hover:scale-105' 
-          : 'border-2 border-[#e17564] text-[#e17564] hover:bg-[#e17564] hover:text-white'
-      }`}>
+      <button 
+        onClick={() => onRentClick(spaceType)}
+        className={`w-full mt-6 py-3 px-4 rounded-lg transition-all duration-200 font-semibold ${
+          highlight 
+            ? 'bg-[#e17564] text-white hover:bg-opacity-90 hover:transform hover:scale-105' 
+            : 'border-2 border-[#e17564] text-[#e17564] hover:bg-[#e17564] hover:text-white'
+        }`}
+      >
         Jetzt mieten
       </button>
     </CardContent>
@@ -78,6 +83,15 @@ const PricingCard = ({ title, price, features, icon: Icon, highlight, descriptio
 
 // PricingSection Komponente
 const PricingSection = () => {
+  const navigate = useNavigate();
+  const [showRentalForm, setShowRentalForm] = useState(false);
+  const [selectedSpaceType, setSelectedSpaceType] = useState('regal-a');
+
+  const handleRentClick = (spaceType) => {
+    setSelectedSpaceType(spaceType);
+    setShowRentalForm(true);
+  };
+
   const packages = [
     {
       title: "Verkaufsblock A-Lage",
@@ -93,7 +107,8 @@ const PricingSection = () => {
       ],
       icon: Store,
       highlight: true,
-      minDuration: "3 Monate"
+      minDuration: "3 Monate",
+      spaceType: "regal-a"
     },
     {
       title: "Verkaufsblock B-Lage",
@@ -108,7 +123,8 @@ const PricingSection = () => {
         "Herstellerpräsentation inklusive"
       ],
       icon: Box,
-      minDuration: "3 Monate"
+      minDuration: "3 Monate",
+      spaceType: "regal-b"
     },
     {
       title: "Service-Paket Plus",
@@ -123,7 +139,8 @@ const PricingSection = () => {
         "Verkaufsanalysen"
       ],
       icon: PackageSearch,
-      minDuration: "1 Monat"
+      minDuration: "1 Monat",
+      spaceType: "service"
     }
   ];
 
@@ -151,7 +168,11 @@ const PricingSection = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
         {packages.map((pkg, index) => (
-          <PricingCard key={index} {...pkg} />
+          <PricingCard 
+            key={index} 
+            {...pkg}
+            onRentClick={handleRentClick}
+          />
         ))}
       </div>
 
@@ -171,10 +192,20 @@ const PricingSection = () => {
         <p className="text-gray-600 mb-6">
           Wir beraten Sie gerne bei der Auswahl der optimalen Verkaufsfläche
         </p>
-        <button className="bg-[#e17564] text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition-colors duration-200 font-semibold">
-          Kontakt aufnehmen
-        </button>
+        <Link to="/contact">
+          <button className="bg-[#e17564] text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition-colors duration-200 font-semibold flex items-center justify-center gap-2 mx-auto">
+            <Mail className="w-5 h-5" />
+            <span>Kontakt aufnehmen</span>
+          </button>
+        </Link>
       </div>
+
+      {showRentalForm && (
+        <RentalRequestForm 
+          spaceType={selectedSpaceType}
+          onClose={() => setShowRentalForm(false)}
+        />
+      )}
 
       <ScrollToTop />
     </div>

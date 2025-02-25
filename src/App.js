@@ -3,11 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import Pricing from './pages/Pricing'; 
-import Impressum from './pages/Impressum';// Achte auf die Kleinschreibung wegen deiner filename
+import Impressum from './pages/Impressum';
 import Datenschutz from './pages/Datenschutz';
 import Footer from './components/Footer';
 import CookieBanner from './components/CookieBanner';
 import Location from './pages/Location';
+import Contact from './pages/Contact';
+import Vendors from './pages/Vendors';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
             <Route path="/impressum" element={<Impressum />} />
             <Route path="/datenschutz" element={<Datenschutz />} />
             <Route path="/location" element={<Location />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/vendors" element={<Vendors />} />
           </Routes>
         </main>
         <Footer />
