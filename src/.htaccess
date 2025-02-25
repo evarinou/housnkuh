@@ -4,10 +4,19 @@ RewriteEngine On
 # Set base directory (adjust if your site is in a subdirectory)
 # RewriteBase /
 
-# Handle API requests
-RewriteRule ^api/contact$ backend/contact-form.php [L]
-RewriteRule ^api/rental-request$ backend/rental-request.php [L]
-RewriteRule ^api/newsletter/subscribe$ backend/newsletter.php [L]
+# Central API Router for easier management
+RewriteRule ^api/(.*)$ api-router.php?endpoint=$1 [QSA,L]
+
+# Direct API endpoints as fallback (direct in root)
+RewriteRule ^api/contact$ contact-form.php [L]
+RewriteRule ^api/rental-request$ rental-request.php [L]
+RewriteRule ^api/newsletter$ newsletter.php [L]
+RewriteRule ^api/newsletter/subscribe$ newsletter.php [L]
+
+# Alternative API paths (in backend folder)
+RewriteRule ^api/backend/contact$ backend/contact-form.php [L]
+RewriteRule ^api/backend/rental-request$ backend/rental-request.php [L]
+RewriteRule ^api/backend/newsletter$ backend/newsletter.php [L]
 
 # Send 404 requests to index.html for client-side routing
 RewriteCond %{REQUEST_FILENAME} !-f
