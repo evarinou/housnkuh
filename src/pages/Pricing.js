@@ -83,7 +83,7 @@ const PricingCard = ({ title, price, features, icon: Icon, highlight, descriptio
 
 // PricingSection Komponente
 const PricingSection = () => {
-  const navigate = useNavigate();
+//  const navigate = useNavigate();
   const [showRentalForm, setShowRentalForm] = useState(false);
   const [selectedSpaceType, setSelectedSpaceType] = useState('regal-a');
 
