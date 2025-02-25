@@ -13,25 +13,29 @@ const NewsletterSignup = () => {
     setErrorMessage('');
     
     try {
+      // Echten API-Call durchführen
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('type', type);
+      
       const response = await fetch('/newsletter.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, type }),
+        body: formData,
       });
       
       const data = await response.json();
       
-      if (!response.ok) {
-        throw new Error(data.error || 'Ein Fehler ist aufgetreten');
+      if (data.success) {
+        setStatus('success');
+        setEmail('');
+      } else {
+        setStatus('error');
+        setErrorMessage(data.message || 'Ein Fehler ist aufgetreten.');
       }
-      
-      setStatus('success');
-      setEmail('');
     } catch (error) {
       setStatus('error');
-      setErrorMessage(error.message || 'Ein Fehler ist aufgetreten');
+      setErrorMessage('Verbindungsfehler. Bitte versuchen Sie es später erneut.');
+      console.error('Newsletter error:', error);
     }
   };
 

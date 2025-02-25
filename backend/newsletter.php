@@ -5,74 +5,60 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// CORS Preflight-Anfragen beantworten
+// Bei OPTIONS-Anfrage sofort beenden (für CORS)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
 
-// Nur POST-Anfragen bearbeiten
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Nur POST-Anfragen erlaubt']);
+// Daten aus der Anfrage lesen (unterstützt sowohl FormData als auch JSON)
+$input = file_get_contents('php://input');
+if (!empty($input)) {
+    // JSON-Anfrage
+    $data = json_decode($input, true);
+    $email = isset($data['email']) ? $data['email'] : '';
+    $type = isset($data['type']) ? $data['type'] : 'customer';
+} else {
+    // FormData-Anfrage
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $type = isset($_POST['type']) ? $_POST['type'] : 'customer';
+}
+
+// Einfache Validierung
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(['success' => false, 'message' => 'Bitte geben Sie eine gültige E-Mail-Adresse an.']);
     exit;
 }
 
-// Datenbankverbindung herstellen
-$host = '127.0.0.1';
-$port = 3307;
-$database = 'yhe56tye_housnkuh';
+// MySQL-Verbindung herstellen
+$host = 'localhost'; // oder was bei Ihnen funktioniert hat
+$dbname = 'yhe56tye_housnkuh';
 $username = 'yhe56tye_eva';
-$password = 'IHR_PASSWORT_HIER'; // Ersetzen Sie dies mit Ihrem echten Passwort
+$password = 'IHR_KORREKTES_PASSWORT'; // Ersetzen Sie dies mit Ihrem Passwort
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$database", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    error_log('Datenbankfehler: ' . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Datenbankverbindungsfehler']);
-    exit;
-}
-
-// Daten aus der Anfrage lesen
-$data = json_decode(file_get_contents('php://input'), true);
-
-if (!isset($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Gültige E-Mail-Adresse erforderlich']);
-    exit;
-}
-
-$email = $data['email'];
-$type = isset($data['type']) && in_array($data['type'], ['customer', 'vendor']) ? $data['type'] : 'customer';
-
-// In Datenbank speichern
-try {
+    $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
     // Prüfen, ob die E-Mail bereits existiert
-    $stmt = $pdo->prepare("SELECT id FROM newsletter WHERE email = ?");
+    $stmt = $db->prepare("SELECT id FROM newsletter WHERE email = ?");
     $stmt->execute([$email]);
     
     if ($stmt->rowCount() > 0) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Diese E-Mail ist bereits registriert']);
+        echo json_encode(['success' => false, 'message' => 'Diese E-Mail-Adresse ist bereits registriert.']);
         exit;
     }
     
-    // Neue Anmeldung einfügen
-    $stmt = $pdo->prepare("INSERT INTO newsletter (email, type) VALUES (?, ?)");
+    // E-Mail in die Datenbank einfügen
+    $stmt = $db->prepare("INSERT INTO newsletter (email, type) VALUES (?, ?)");
     $success = $stmt->execute([$email, $type]);
     
     if ($success) {
-        http_response_code(201);
-        echo json_encode(['message' => 'Newsletter-Anmeldung erfolgreich!']);
+        echo json_encode(['success' => true, 'message' => 'Vielen Dank für Ihre Anmeldung!']);
     } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Fehler beim Speichern der Anmeldung']);
+        echo json_encode(['success' => false, 'message' => 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.']);
     }
-} catch(PDOException $e) {
-    error_log('SQL-Fehler: ' . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Datenbankfehler']);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 ?>
