@@ -32,16 +32,10 @@ const Navigation = () => {
               Standort
             </Link>
             <Link 
-              to="/rent" 
+              to="/pricing"
               className="text-primary font-medium hover:text-secondary transition-colors duration-200"
             >
               Verkaufsfläche mieten
-            </Link>
-            <Link 
-              to="/pricing" 
-              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
-            >
-              Pricing
             </Link>
           </div>
 
@@ -76,18 +70,11 @@ const Navigation = () => {
               Standort
             </Link>
             <Link
-              to="/rent"
-              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Verkaufsfläche mieten
-            </Link>
-            <Link
               to="/pricing"
               className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
               onClick={() => setIsOpen(false)}
             >
-              Pricing
+              Verkaufsfläche mieten
             </Link>
           </div>
         </div>
