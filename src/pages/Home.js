@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, Clock, ShoppingBag, Users, MapPin, Heart } from 'lucide-react';
 import NewsletterSignup from '../components/NewsletterSignup';
+import ConceptGraphic from '../components/ConceptGraphic';
 
 // Feature Card Component mit Animation
 const FeatureCard = ({ icon: Icon, title, description }) => {
@@ -74,9 +75,9 @@ const Home = () => {
   ];
 
   return (
-    <div className="space-y-16 pb-16">
-      {/* Hero Section mit Animation */}
-      <section className="bg-gradient-to-b from-gray-50 to-white py-20">
+    <div className="space-y-8 pb-16">
+      {/* Hero Section mit Animation - PADDING UNTEN REDUZIERT von py-20 auf pt-20 pb-6 */}
+      <section className="bg-gradient-to-b from-gray-50 to-white pt-20 pb-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center animate-fadeIn">
             <h1 className="text-4xl font-bold text-[var(--secondary)] sm:text-5xl mb-6 animate-slideDown">
@@ -92,6 +93,9 @@ const Home = () => {
         </div>
       </section>
 
+      {/* DIREKT die ConceptGraphic-Komponente einbinden */}
+      <ConceptGraphic />
+      
       {/* Concept Explanation mit Animation */}
       <section className="max-w-4xl mx-auto px-4 transform transition-all duration-500 hover:scale-105">
         <div className="text-center mb-12">
