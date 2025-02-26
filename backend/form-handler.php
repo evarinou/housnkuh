@@ -169,7 +169,7 @@ try {
     if (!$hasConfig) {
         // Fallback-Konfiguration
         $dbConfig = [
-            'host' => 'localhost', // Versuche 'localhost' statt '127.0.0.1'
+            'host' => '127.0.0.1', // Versuche 'localhost' statt '127.0.0.1'
             'port' => '3307',      // Standard MySQL Port ist 3306, prüfe bei deinem Hosting
             'dbname' => 'yhe56tye_housnkuh',
             'username' => 'yhe56tye_eva',
@@ -180,7 +180,7 @@ try {
     // Datenbankverbindung mit besserer Fehlerbehandlung
     $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']};charset=utf8mb4";
     // Port nur hinzufügen, wenn nicht Standard
-    if (isset($dbConfig['port']) && $dbConfig['port'] != '3306') {
+    if (isset($dbConfig['port']) && $dbConfig['port'] != '3307') {
         $dsn .= ";port={$dbConfig['port']}";
     }
     
