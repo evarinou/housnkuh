@@ -171,7 +171,7 @@ try {
         $dbConfig = [
             'host' => 'localhost',
             'port' => '3307',
-            'dbname' => 'housnkuh',
+            'dbname' => 'he56tye_housnkuh',
             'username' => 'yhe56tye_eva',
             'password' => 'SherlockHolmes2!'
         ];
