@@ -34,7 +34,7 @@ loadEnv($envPath);
 
 // Datenbank-Konfiguration
 $dbConfig = [
-    'host' => getenv('DB_HOST') ?: 'localhost',
+    'host' => getenv('DB_HOST') ?: '127.0.0.1',
     'port' => getenv('DB_PORT') ?: '3307',
     'dbname' => getenv('DB_NAME') ?: 'yhe56tye_housnkuh',
     'username' => getenv('DB_USER') ?: 'yhe56tye_eva',
