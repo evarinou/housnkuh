@@ -169,7 +169,7 @@ try {
     if (!$hasConfig) {
         // Fallback-Konfiguration
         $dbConfig = [
-            'host' => 'localhost',
+            'host' => '127.0.0.1',
             'port' => '3307',
             'dbname' => 'he56tye_housnkuh',
             'username' => 'yhe56tye_eva',
