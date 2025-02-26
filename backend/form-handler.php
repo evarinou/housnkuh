@@ -40,6 +40,12 @@ file_put_contents('form_submissions.log', $log_message . "\n\n", FILE_APPEND);
 // E-Mail-Empfänger
 $to = 'eva-maria.schaller@housnkuh.de';
 
+// Daten für universelle Datenbankverbindung vorbereiten
+$email = '';
+$name = '';
+$phone = '';
+$summary = '';
+
 // Basierend auf dem Formulartyp unterschiedliche Aktionen ausführen
 switch ($form_type) {
     case 'contact':
@@ -48,6 +54,7 @@ switch ($form_type) {
         $subject = $data['subject'] ?? 'Kontaktanfrage';
         $message = $data['message'] ?? 'Keine Nachricht';
         $phone = $data['phone'] ?? 'Nicht angegeben';
+        $summary = $subject;
         
         // E-Mail-Betreff und Inhalt erstellen
         $email_subject = "[housnkuh Kontakt] $subject";
@@ -66,6 +73,8 @@ switch ($form_type) {
         $productType = $data['productType'] ?? 'Nicht angegeben';
         $spaceType = $data['spaceType'] ?? 'Nicht angegeben';
         $message = $data['message'] ?? '';
+        $name = $contactPerson . ' (' . $businessName . ')';
+        $summary = $productType . ' - ' . $spaceType;
         
         // Mapping der Verkaufsflächentypen
         $spaceTypeNames = [
@@ -99,6 +108,7 @@ switch ($form_type) {
         $vendor1 = $data['guessedVendors'][0] ?? 'Nicht angegeben';
         $vendor2 = $data['guessedVendors'][1] ?? 'Nicht angegeben';
         $vendor3 = $data['guessedVendors'][2] ?? 'Nicht angegeben';
+        $summary = "Vermutete Händler: $vendor1, $vendor2, $vendor3";
         
         // E-Mail-Betreff und Inhalt erstellen
         $email_subject = "[housnkuh Wettbewerb] Neue Teilnahme von $name";
@@ -110,65 +120,114 @@ switch ($form_type) {
         $email_body .= "1. $vendor1\n";
         $email_body .= "2. $vendor2\n";
         $email_body .= "3. $vendor3\n";
+        break;
         
-        // Optional: In Datenbank speichern
-        try {
-            // Konfigurationsdatei einbinden
-            require_once dirname(__FILE__) . '/config.php';
-            
-            // Datenbankverbindung herstellen
-            $pdo = new PDO(
-                "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']};charset=utf8mb4",
-                $dbConfig['username'],
-                $dbConfig['password'],
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-            );
-            
-            // Tabelle erstellen, falls nicht vorhanden
-            $pdo->exec("
-                CREATE TABLE IF NOT EXISTS vendor_contest (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    email VARCHAR(255) NOT NULL,
-                    phone VARCHAR(50),
-                    vendor1 VARCHAR(255) NOT NULL,
-                    vendor2 VARCHAR(255) NOT NULL,
-                    vendor3 VARCHAR(255) NOT NULL,
-                    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    ip_address VARCHAR(45)
-                )
-            ");
-            
-            // Eintrag in die Datenbank einfügen
-            $stmt = $pdo->prepare("
-                INSERT INTO vendor_contest (name, email, phone, vendor1, vendor2, vendor3, ip_address)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ");
-            
-            $stmt->execute([
-                $name, 
-                $email, 
-                $phone, 
-                $vendor1, 
-                $vendor2, 
-                $vendor3, 
-                $_SERVER['REMOTE_ADDR']
+    case 'newsletter':
+        $email = $data['email'] ?? '';
+        $type = $data['type'] ?? 'customer';
+        $name = $email; // Setze E-Mail als Name, da kein Name angegeben wird
+        $summary = "Typ: " . ($type === 'vendor' ? 'Direktvermarkter' : 'Kunde');
+        
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Bitte geben Sie eine gültige E-Mail-Adresse an.'
             ]);
-            
-        } catch (PDOException $e) {
-            // Fehler protokollieren, aber fortfahren
-            file_put_contents('form_submissions.log', "DB-Fehler beim Speichern von VendorContest: {$e->getMessage()}\n", FILE_APPEND);
+            exit;
         }
+        
+        // E-Mail-Betreff und Inhalt erstellen
+        $email_subject = "[housnkuh Newsletter] Neue Anmeldung";
+        $email_body = "Neue Newsletter-Anmeldung:\n\n";
+        $email_body .= "E-Mail: $email\n";
+        $email_body .= "Typ: " . ($type === 'vendor' ? 'Direktvermarkter' : 'Kunde') . "\n";
         break;
         
     default:
         // Allgemeiner Fall
+        $name = 'Unbekannt (Generic Form)';
+        $email = isset($data['email']) ? $data['email'] : 'keine@angabe.de';
+        $summary = 'Generisches Formular';
+        
         $email_subject = "[housnkuh Website] Neue Formularanfrage";
         $email_body = "Neue Anfrage über die Website:\n\n";
         
         foreach ($data as $key => $value) {
-            $email_body .= "$key: $value\n";
+            if (is_array($value)) {
+                $email_body .= "$key: " . json_encode($value, JSON_UNESCAPED_UNICODE) . "\n";
+            } else {
+                $email_body .= "$key: $value\n";
+            }
         }
+}
+
+// Versuchen, die Daten in der Datenbank zu speichern
+try {
+    // Konfigurationsdatei einbinden
+    $hasConfig = @include_once(dirname(__FILE__) . '/config.php');
+    
+    if (!$hasConfig) {
+        // Fallback-Konfiguration
+        $dbConfig = [
+            'host' => 'localhost',
+            'port' => '3307',
+            'dbname' => 'housnkuh',
+            'username' => 'yhe56tye_eva',
+            'password' => 'SherlockHolmes2!'
+        ];
+    }
+    
+    // Datenbankverbindung herstellen
+    $dsn = "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']};charset=utf8mb4";
+    $pdo = new PDO(
+        $dsn,
+        $dbConfig['username'],
+        $dbConfig['password'],
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+    
+    // Erstelle eine universelle Tabelle für alle Formulartypen, falls nicht existiert
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS form_submissions (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            form_type VARCHAR(50) NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            phone VARCHAR(50),
+            summary TEXT,
+            data TEXT,
+            ip_address VARCHAR(45),
+            status ENUM('new', 'contacted', 'processed', 'canceled') DEFAULT 'new',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ");
+    
+    // Serialisiere die gesamten Daten für die Speicherung
+    $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE);
+    
+    // Speichere den Eintrag in der Datenbank
+    $stmt = $pdo->prepare("
+        INSERT INTO form_submissions 
+        (form_type, name, email, phone, summary, data, ip_address)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+    
+    $stmt->execute([
+        $form_type,
+        $name,
+        $email,
+        $phone,
+        $summary,
+        $jsonData,
+        $_SERVER['REMOTE_ADDR']
+    ]);
+    
+    // Logging für erfolgreiche DB-Speicherung
+    file_put_contents('form_submissions.log', "Daten erfolgreich in die Datenbank gespeichert (ID: {$pdo->lastInsertId()})\n", FILE_APPEND);
+    
+} catch (PDOException $e) {
+    // Fehler protokollieren, aber fortfahren
+    file_put_contents('form_submissions.log', "DB-Fehler beim Speichern: {$e->getMessage()}\n", FILE_APPEND);
 }
 
 // E-Mail-Header
