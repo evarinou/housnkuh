@@ -36,9 +36,9 @@ loadEnv($envPath);
 $dbConfig = [
     'host' => getenv('DB_HOST') ?: 'localhost',
     'port' => getenv('DB_PORT') ?: '3307',
-    'dbname' => getenv('DB_NAME') ?: 'housnkuh',
-    'username' => getenv('DB_USER') ?: 'root',
-    'password' => getenv('DB_PASSWORD') ?: '',
+    'dbname' => getenv('DB_NAME') ?: 'yhe56tye_housnkuh',
+    'username' => getenv('DB_USER') ?: 'yhe56tye_eva',
+    'password' => getenv('DB_PASSWORD') ?: 'SherlockHolmes2!',
 ];
 
 // Admin-Konfiguration
