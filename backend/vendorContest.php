@@ -7,23 +7,11 @@ error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', 'vendor_contest_error.log');
 
-// Direkte Datenbankeinstellungen
-$host = '127.0.0.1';
-$port = 3307;
-$database = 'yhe56tye_housnkuh';
-$username = 'yhe56tye_eva';
-$password = 'SherlockHolmes2!'; 
-
 // CORS-Header setzen
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
-
-// Protokolliere eingehende Anfragen für Debugging
-$logMessage = "Anfrage empfangen: " . date('Y-m-d H:i:s') . "\n";
-$logMessage .= "Methode: " . $_SERVER['REQUEST_METHOD'] . "\n";
-file_put_contents('vendor_contest_requests.log', $logMessage, FILE_APPEND);
 
 // Bei OPTIONS-Anfrage sofort beenden (für CORS Preflight)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -39,6 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ]);
     exit;
 }
+
+// Protokolliere eingehende Anfragen für Debugging
+$logMessage = "Anfrage empfangen: " . date('Y-m-d H:i:s') . "\n";
+$logMessage .= "Methode: " . $_SERVER['REQUEST_METHOD'] . "\n";
+file_put_contents('vendor_contest_requests.log', $logMessage, FILE_APPEND);
 
 // Daten aus der Anfrage lesen
 $rawData = file_get_contents('php://input');
@@ -91,15 +84,19 @@ try {
     $vendor2 = $data['guessedVendors'][1];
     $vendor3 = $data['guessedVendors'][2];
     
-    // MySQL-Verbindung herstellen
+    // MySQL-Verbindung herstellen - dazu config.php einbinden
+    require_once dirname(__FILE__) . '/config.php';
+    
     try {
-        $db = new PDO("mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4", 
-            $username, $password, 
+        $pdo = new PDO(
+            "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']};charset=utf8mb4", 
+            $dbConfig['username'], 
+            $dbConfig['password'], 
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
         
         // Tabelle erstellen falls nicht vorhanden
-        $db->exec("
+        $pdo->exec("
             CREATE TABLE IF NOT EXISTS vendor_contest (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
@@ -114,7 +111,7 @@ try {
         ");
         
         // Prüfen, ob die E-Mail bereits teilgenommen hat
-        $stmt = $db->prepare("SELECT id FROM vendor_contest WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT id FROM vendor_contest WHERE email = ?");
         $stmt->execute([$data['email']]);
         
         if ($stmt->rowCount() > 0) {
@@ -129,7 +126,7 @@ try {
         $ip = $_SERVER['REMOTE_ADDR'];
         
         // Daten in die Datenbank einfügen
-        $stmt = $db->prepare("
+        $stmt = $pdo->prepare("
             INSERT INTO vendor_contest (name, email, phone, vendor1, vendor2, vendor3, ip_address) 
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
@@ -142,6 +139,23 @@ try {
             $vendor3, 
             $ip
         ]);
+        
+        // E-Mail an Admin senden
+        $to = 'eva-maria.schaller@housnkuh.de';
+        $subject = '[housnkuh Wettbewerb] Neue Teilnahme: ' . $data['name'];
+        $message = "Neue Wettbewerbsteilnahme:\n\n";
+        $message .= "Name: " . $data['name'] . "\n";
+        $message .= "E-Mail: " . $data['email'] . "\n";
+        $message .= "Telefon: " . $phone . "\n\n";
+        $message .= "Vermutete Direktvermarkter:\n";
+        $message .= "1. " . $vendor1 . "\n";
+        $message .= "2. " . $vendor2 . "\n";
+        $message .= "3. " . $vendor3 . "\n";
+        
+        $headers = "From: noreply@housnkuh.de\r\n";
+        $headers .= "Reply-To: " . $data['email'] . "\r\n";
+        
+        mail($to, $subject, $message, $headers);
         
         if ($success) {
             echo json_encode([
@@ -180,4 +194,3 @@ try {
     // Protokolliere den Fehler
     file_put_contents('vendor_contest_requests.log', "Allgemeiner Fehler: {$e->getMessage()}\n", FILE_APPEND);
 }
-?>

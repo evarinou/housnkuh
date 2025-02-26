@@ -38,7 +38,7 @@ const Contact = () => {
       }
 
       // Produktionsumgebung
-      const response = await axios.post('/api/contact', formData);
+      const response = await axios.post('/form-handler.php?type=contact', formData);
       
       if (response.data.success) {
         setStatus('success');
