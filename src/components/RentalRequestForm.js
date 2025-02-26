@@ -16,12 +16,12 @@ const RentalRequestForm = ({ spaceType, onClose }) => {
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
   const [errorMessage, setErrorMessage] = useState('');
 
-  const spaceTypeLabels = {
+ /* const spaceTypeLabels = {
     'regal-a': 'Verkaufsblock Lage A (35€/Monat)',
     'regal-b': 'Verkaufsblock Lage B (15€/Monat)',
     'kuehl': 'Verkaufsblock gekühlt (50€/Monat)',
     'tisch': 'Verkaufsblock Tisch (40€/Monat)'
-  };
+  };*/
 
   const handleChange = (e) => {
     const { name, value } = e.target;
