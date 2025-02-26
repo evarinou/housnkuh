@@ -161,7 +161,7 @@ switch ($form_type) {
         }
 }
 
-// Versuchen, die Daten in der Datenbank zu speichern
+// Verbesserte Fehlerbehandlung für die Datenbankverbindung
 try {
     // Konfigurationsdatei einbinden
     $hasConfig = @include_once(dirname(__FILE__) . '/config.php');
@@ -169,22 +169,34 @@ try {
     if (!$hasConfig) {
         // Fallback-Konfiguration
         $dbConfig = [
-            'host' => '127.0.0.1',
-            'port' => '3307',
-            'dbname' => 'he56tye_housnkuh',
+            'host' => 'localhost', // Versuche 'localhost' statt '127.0.0.1'
+            'port' => '3307',      // Standard MySQL Port ist 3306, prüfe bei deinem Hosting
+            'dbname' => 'yhe56tye_housnkuh',
             'username' => 'yhe56tye_eva',
             'password' => 'SherlockHolmes2!'
         ];
     }
     
-    // Datenbankverbindung herstellen
-    $dsn = "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']};charset=utf8mb4";
+    // Datenbankverbindung mit besserer Fehlerbehandlung
+    $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']};charset=utf8mb4";
+    // Port nur hinzufügen, wenn nicht Standard
+    if (isset($dbConfig['port']) && $dbConfig['port'] != '3306') {
+        $dsn .= ";port={$dbConfig['port']}";
+    }
+    
     $pdo = new PDO(
         $dsn,
         $dbConfig['username'],
         $dbConfig['password'],
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
+    
+    // Detaillierte Fehlerprotokollierung
+    file_put_contents('form_submissions.log', "DSN: $dsn\n", FILE_APPEND);
+    file_put_contents('form_submissions.log', "Username: {$dbConfig['username']}\n", FILE_APPEND);
+    
+    // Rest deines Codes...
+}
     
     // Erstelle eine universelle Tabelle für alle Formulartypen, falls nicht existiert
     $pdo->exec("

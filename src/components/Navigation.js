@@ -1,41 +1,88 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import logo from '../assets/logo.svg';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
+  // Scroll-Handler für Hintergrundeffekt
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
+
+  // Schließt das mobile Menü, wenn die Route wechselt
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+  
+  // Prüft, ob ein Link aktiv ist
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+  
   return (
-    <nav className="fixed top-0 w-full bg-white shadow-lg z-50">
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      scrolled ? 'bg-white shadow-md py-2' : 'bg-white shadow-lg py-4'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-32 items-center">
-          {/* Logo */}
+        <div className="flex justify-between items-center">
+          {/* Logo mit korrektem Abstand gemäß Styleguide */}
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/">
-              <img className="h-24 w-auto" src={logo} alt="Logo" />
+            <Link to="/" className="block p-2">
+              <img className="h-20 w-auto" src={logo} alt="housnkuh Logo" />
             </Link>
           </div>
 
-          {/* Desktop Navigation - Optimiert für Quicksand */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link 
               to="/vendors" 
-              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
+              className={`font-medium hover:text-[var(--primary)] transition-colors duration-200 pb-1 border-b-2 ${
+                isActive('/vendors') 
+                  ? 'text-[var(--primary)] border-[var(--primary)]' 
+                  : 'text-[var(--secondary)] border-transparent'
+              }`}
             >
               Direktvermarkter
             </Link>
             <Link 
               to="/location" 
-              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
+              className={`font-medium hover:text-[var(--primary)] transition-colors duration-200 pb-1 border-b-2 ${
+                isActive('/location') 
+                  ? 'text-[var(--primary)] border-[var(--primary)]' 
+                  : 'text-[var(--secondary)] border-transparent'
+              }`}
             >
               Standort
             </Link>
             <Link 
               to="/pricing"
-              className="text-primary font-medium hover:text-secondary transition-colors duration-200"
+              className={`font-medium hover:text-[var(--primary)] transition-colors duration-200 pb-1 border-b-2 ${
+                isActive('/pricing') 
+                  ? 'text-[var(--primary)] border-[var(--primary)]' 
+                  : 'text-[var(--secondary)] border-transparent'
+              }`}
             >
               Verkaufsfläche mieten
+            </Link>
+            <Link 
+              to="/contact"
+              className={`text-white bg-[var(--primary)] hover:bg-[var(--primary)]/90 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                isActive('/contact') ? 'ring-2 ring-[var(--primary)] ring-offset-2' : ''
+              }`}
+            >
+              Kontakt
             </Link>
           </div>
 
@@ -43,7 +90,9 @@ const Navigation = () => {
           <div className="flex items-center md:hidden">
             <button 
               onClick={() => setIsOpen(!isOpen)} 
-              className="focus:outline-none text-primary hover:text-secondary transition-colors duration-200"
+              className="focus:outline-none text-[var(--secondary)] hover:text-[var(--primary)] transition-colors duration-200 p-2"
+              aria-expanded={isOpen}
+              aria-label={isOpen ? "Menü schließen" : "Menü öffnen"}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -51,34 +100,45 @@ const Navigation = () => {
         </div>
       </div>
       
-      {/* Mobile Navigation - Optimiert für Quicksand */}
-      {isOpen && (
-        <div className="md:hidden bg-white">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link
-              to="/vendors"
-              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Direktvermarkter
-            </Link>
-            <Link
-              to="/location"
-              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Standort
-            </Link>
-            <Link
-              to="/pricing"
-              className="block px-3 py-2 text-primary font-medium hover:text-secondary transition-colors duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Verkaufsfläche mieten
-            </Link>
-          </div>
+      {/* Mobile Navigation - Verbesserte Animation */}
+      <div className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+        isOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        <div className="px-4 py-2 bg-white shadow-inner">
+          <Link
+            to="/vendors"
+            className={`block px-3 py-2 rounded-md font-medium hover:bg-gray-100 ${
+              isActive('/vendors') ? 'text-[var(--primary)]' : 'text-[var(--secondary)]'
+            }`}
+          >
+            Direktvermarkter
+          </Link>
+          <Link
+            to="/location"
+            className={`block px-3 py-2 rounded-md font-medium hover:bg-gray-100 ${
+              isActive('/location') ? 'text-[var(--primary)]' : 'text-[var(--secondary)]'
+            }`}
+          >
+            Standort
+          </Link>
+          <Link
+            to="/pricing"
+            className={`block px-3 py-2 rounded-md font-medium hover:bg-gray-100 ${
+              isActive('/pricing') ? 'text-[var(--primary)]' : 'text-[var(--secondary)]'
+            }`}
+          >
+            Verkaufsfläche mieten
+          </Link>
+          <Link
+            to="/contact"
+            className={`block px-3 py-2 mt-2 bg-[var(--primary)] text-white rounded-md font-medium hover:bg-[var(--primary)]/90 ${
+              isActive('/contact') ? 'ring-2 ring-offset-2 ring-[var(--primary)]' : ''
+            }`}
+          >
+            Kontakt
+          </Link>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
