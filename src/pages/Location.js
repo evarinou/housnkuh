@@ -27,7 +27,7 @@ const HistorySection = () => (
       Ursprünglich beherbergte sie die Cammerer-Drogerie und später die Buchhandlung LeseZeichen.
     </p>
     <p className="text-gray-600">
-      Ab Sommer 2025 wird sie als innovativer Marktplatz für regionale Produkte eine neue Ära einläuten.
+      Ab Sommer 2025 wird sie als neuer Marktplatz für regionale Produkte eine neue Ära einläuten.
     </p>
   </div>
 );

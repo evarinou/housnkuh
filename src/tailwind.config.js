@@ -21,6 +21,9 @@ module.exports = {
         medium: '500',
         semibold: '600',
         bold: '700',
+      },
+      animation: {
+        'spin-slow': 'spin 8s linear infinite', // Langsame Drehung für das Settings-Icon
       }
     },
   },

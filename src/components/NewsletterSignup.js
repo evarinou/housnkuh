@@ -54,7 +54,7 @@ const NewsletterSignup = () => {
     <div className="bg-[var(--secondary)] text-white rounded-lg p-8 text-center">
       <h2 className="text-2xl font-bold mb-4">Bleiben Sie informiert!</h2>
       <p className="mb-6">
-        Melden Sie sich für unseren Newsletter an und erfahren Sie als Erste/r von unserer Eröffnung.
+        Melden Sie sich für den Newsletter an und erfahren Sie als Erste/r von der Eröffnung.
       </p>
       
       {status === 'success' ? (

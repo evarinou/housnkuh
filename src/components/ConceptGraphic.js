@@ -46,14 +46,14 @@ const ConceptGraphic = () => {
                 <ShoppingBag className="w-10 h-10 text-[#e17564]" />
               </div>
               <h3 className="font-semibold text-lg mb-2">Kunden</h3>
-              <p className="text-sm text-gray-600">kaufen rund um die Uhr regionale Produkte</p>
+              <p className="text-sm text-gray-600">kaufen beinahe rund um die Uhr regionale Produkte</p>
             </div>
           </div>
           
           {/* Special Feature */}
           <div className="mt-8 mx-auto max-w-xs text-center bg-[#09122c] rounded-lg py-3 px-4 text-white flex items-center justify-center gap-3">
             <Clock className="w-5 h-5" />
-            <span className="font-medium">Fast 24/7 geöffnet mit Kartenzugang</span>
+            <span className="font-medium">Fast durchgehend geöffnet mit Kartenzugang</span>
           </div>
         </div>
         
@@ -89,13 +89,13 @@ const ConceptGraphic = () => {
               <ShoppingBag className="w-10 h-10 text-[#e17564]" />
             </div>
             <h3 className="font-semibold text-lg mb-2">Kunden</h3>
-            <p className="text-sm text-gray-600">kaufen rund um die Uhr regionale Produkte</p>
+            <p className="text-sm text-gray-600">kaufen beinahe rund um die Uhr regionale Produkte</p>
           </div>
           
           {/* Special Feature */}
           <div className="mx-auto max-w-xs text-center bg-[#09122c] rounded-lg py-3 px-4 text-white flex items-center justify-center gap-3">
             <Clock className="w-5 h-5" />
-            <span className="font-medium">Fast 24/7 geöffnet mit Kartenzugang</span>
+            <span className="font-medium">Fast durchgehend geöffnet mit Kartenzugang</span>
           </div>
         </div>
       </div>

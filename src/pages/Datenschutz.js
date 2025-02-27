@@ -27,7 +27,7 @@ const Datenschutz = () => {
           <section>
             <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">2. Hosting</h2>
             <p className="text-gray-700">
-              Unser Hoster erhebt in sog. Logfiles folgende Daten, die Ihr Browser übermittelt:
+              Der Hoster erhebt in sog. Logfiles folgende Daten, die Ihr Browser übermittelt:
             </p>
             <ul className="list-disc list-inside text-gray-700 mt-2">
               <li>IP-Adresse</li>
@@ -46,7 +46,7 @@ const Datenschutz = () => {
             <h2 className="text-xl font-semibold text-[var(--secondary)] mb-4">3. Datenerfassung im Laden</h2>
             <h3 className="text-lg font-medium text-[var(--secondary)] mt-4 mb-2">Videoüberwachung</h3>
             <p className="text-gray-700">
-              In unserem Selbstbedienungsladen setzen wir Videoüberwachung ein. Die Überwachung dient der 
+              Im Selbstbedienungsladen wird Videoüberwachung eingesetzt. Die Überwachung dient der 
               Wahrung des Hausrechts, der Sicherheit unserer Kunden und der Verhinderung und Aufklärung von 
               Straftaten. Die Videoaufnahmen werden nach 72 Stunden automatisch gelöscht, sofern keine Vorfälle 
               eine längere Speicherung erforderlich machen.
@@ -54,8 +54,8 @@ const Datenschutz = () => {
 
             <h3 className="text-lg font-medium text-[var(--secondary)] mt-4 mb-2">Zugangssystem</h3>
             <p className="text-gray-700">
-              Für den Zugang zu unserem Laden außerhalb der üblichen Geschäftszeiten nutzen wir ein 
-              Zugangssystem mit EC- oder Kreditkarte. Hierbei werden nur die für die Zugangskontrolle 
+              Für den Zugang zu zum Laden innerhalb der  Geschäftszeiten wird ein 
+              Zugangssystem mit EC- oder Kreditkarte genutzt. Hierbei werden nur die für die Zugangskontrolle 
               notwendigen Daten erfasst und verarbeitet.
             </p>
           </section>

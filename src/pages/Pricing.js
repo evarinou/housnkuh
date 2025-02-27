@@ -180,7 +180,7 @@ const PricingSection = () => {
         <div className="flex items-start">
           <Info className="w-5 h-5 text-[#e17564] mt-0.5 mr-3 flex-shrink-0" />
           <p className="text-gray-600">
-            Alle Preise verstehen sich zzgl. 5% Provision vom Umsatz. Die Provision deckt Kartenzahlungsgebühren und Versicherung ab.
+            Alle Preise verstehen sich Netto zzgl. 5% Provision vom Umsatz. Die Provision deckt Kartenzahlungsgebühren und Versicherung ab.
           </p>
         </div>
       </div>
@@ -190,7 +190,7 @@ const PricingSection = () => {
           Haben Sie Fragen?
         </h2>
         <p className="text-gray-600 mb-6">
-          Wir beraten Sie gerne bei der Auswahl der optimalen Verkaufsfläche
+          Ich berate Sie gerne bei der Auswahl der optimalen Verkaufsfläche
         </p>
         <Link to="/contact">
           <button className="bg-[#e17564] text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition-colors duration-200 font-semibold flex items-center justify-center gap-2 mx-auto">
