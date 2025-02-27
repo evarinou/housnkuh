@@ -134,43 +134,22 @@ switch ($form_type) {
 }
 
 // Versuche die Daten in einer universellen Tabelle zu speichern
+
 try {
-    // Datenbankverbindung mit minimalen Abhängigkeiten
-    $host = 'localhost'; // Oder '127.0.0.1'
+    // Verwende direkt die Konfiguration, die funktioniert
+    $host = '127.0.0.1'; // Dies hat in der Diagnose funktioniert
     $dbname = 'yhe56tye_housnkuh';
     $username = 'yhe56tye_eva';
     $password = 'SherlockHolmes2!';
     $port = '3307';
     
-    // Flexible PDO-Verbindung mit Fehlerbehandlung
-    try {
-        $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
-        if ($port && $port != '3306') {
-            $dsn .= ";port=$port";
-        }
-        
-        $pdo = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-        logMessage("Datenbankverbindung hergestellt");
-    } catch (PDOException $e) {
-        // Versuche alternativen Host oder Port
-        logMessage("Primäre Datenbankverbindung fehlgeschlagen: " . $e->getMessage());
-        
-        // Versuche ohne Port-Angabe
-        try {
-            $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
-            $pdo = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-            logMessage("Alternative Datenbankverbindung hergestellt (ohne Port)");
-        } catch (PDOException $e2) {
-            // Versuche mit 'localhost' statt IP
-            try {
-                $dsn = "mysql:host=localhost;dbname=$dbname;charset=utf8mb4";
-                $pdo = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-                logMessage("Alternative Datenbankverbindung hergestellt (mit localhost)");
-            } catch (PDOException $e3) {
-                throw new Exception("Alle Datenbankverbindungsversuche fehlgeschlagen");
-            }
-        }
-    }
+    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4;port=$port";
+    $pdo = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    logMessage("Datenbankverbindung hergestellt mit 127.0.0.1:3307");
+} catch (PDOException $e) {
+    // Fehler protokollieren, aber weitermachen
+    logMessage("Datenbankfehler: " . $e->getMessage());
+}
     
     // Universelle Tabelle erstellen (falls noch nicht vorhanden)
     $pdo->exec("
