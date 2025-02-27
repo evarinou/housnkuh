@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Mail, Phone, Send, Loader, AlertTriangle, Check } from 'lucide-react';
 
 const Contact = () => {
@@ -25,22 +24,43 @@ const Contact = () => {
     setErrorMessage('');
 
     try {
-      // Lokale Entwicklungsumgebung vs. Produktion unterscheiden
+      // FormData für zuverlässigeren Datentransport
+      const formDataObj = new FormData();
+      
+      // Alle Formularfelder hinzufügen
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataObj.append(key, value);
+      });
+
+      // Lokale Entwicklungsumgebung vs. Produktion
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       
       if (isLocal) {
         // Simuliere erfolgreiche Antwort für Entwicklung
-        console.log('Entwicklungsmodus: Simuliere Anfrage mit Daten:', formData);
+        console.log('Entwicklungsmodus: Simuliere Kontaktanfrage mit Daten:', formData);
         setTimeout(() => {
           setStatus('success');
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            message: '',
+            subject: 'Allgemeine Anfrage'
+          });
         }, 1000);
         return;
       }
 
-      // Produktionsumgebung
-      const response = await axios.post('/form-handler.php?type=contact', formData);
+      // Verwende den universellen Form-Handler mit type=contact
+      const response = await fetch('/universal-form-handler.php?type=contact', {
+        method: 'POST',
+        body: formDataObj
+      });
       
-      if (response.data.success) {
+      // Parse JSON-Antwort
+      const data = await response.json();
+      
+      if (data.success) {
         setStatus('success');
         setFormData({
           name: '',
@@ -50,13 +70,12 @@ const Contact = () => {
           subject: 'Allgemeine Anfrage'
         });
       } else {
-        throw new Error(response.data.message || 'Ein Fehler ist aufgetreten.');
+        throw new Error(data.message || 'Ein Fehler ist aufgetreten.');
       }
     } catch (error) {
       console.error('Kontaktformular-Fehler:', error);
       setStatus('error');
       setErrorMessage(
-        error.response?.data?.message || 
         error.message || 
         'Bei der Übermittlung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'
       );
@@ -163,7 +182,6 @@ const Contact = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
                     />
                   </div>
-
                   <div>
                     <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
                       Betreff

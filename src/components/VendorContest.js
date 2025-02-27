@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Award, Send, CheckCircle, AlertCircle, Loader } from 'lucide-react';
-import axios from 'axios';
 
 const VendorContest = () => {
   const [formData, setFormData] = useState({
@@ -43,6 +42,22 @@ const VendorContest = () => {
     }
 
     try {
+      // FormData für zuverlässigeren Datentransport
+      const formDataObj = new FormData();
+      
+      // Name, Email, Phone hinzufügen
+      formDataObj.append('name', formData.name);
+      formDataObj.append('email', formData.email);
+      formDataObj.append('phone', formData.phone || '');
+      
+      // Vermutete Vendoren als einzelne Felder
+      formData.guessedVendors.forEach((vendor, index) => {
+        formDataObj.append(`vendor${index+1}`, vendor);
+      });
+      
+      // Auch als Array für PHP-Handler, die JSON verarbeiten
+      formDataObj.append('guessedVendors', JSON.stringify(formData.guessedVendors));
+
       // Im lokalen Entwicklungsmodus
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       
@@ -54,13 +69,18 @@ const VendorContest = () => {
         return;
       }
       
-      // Produktionsmodus: Senden der Anfrage an unseren Form-Handler
-      const response = await axios.post('/form-handler.php?type=vendor-contest', formData);
+      // Verwende den universellen Form-Handler
+      const response = await fetch('/universal-form-handler.php?type=vendor-contest', {
+        method: 'POST',
+        body: formDataObj
+      });
       
-      if (response.data.success) {
+      const data = await response.json();
+      
+      if (data.success) {
         setStatus('success');
       } else {
-        throw new Error(response.data.message || 'Ein unbekannter Fehler ist aufgetreten');
+        throw new Error(data.message || 'Ein unbekannter Fehler ist aufgetreten');
       }
     } catch (error) {
       console.error('Fehler beim Absenden:', error);

@@ -68,7 +68,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
-          source: "backend/config.php,backend/newsletter.php,backend/contact-form.php,backend/rental-request.php,backend/api-router.php,backend/form-handler.php,backend/vendor-contest.php"  
+          source: "backend/diagnose.php,backend/config.php,backend/newsletter.php,backend/contact-form.php,backend/rental-request.php,backend/api-router.php,backend/form-handler.php,backend/vendor-contest.php"  
           target: "${{ secrets.REMOTE_TARGET }}"
           strip_components: 1
 

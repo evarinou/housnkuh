@@ -7,12 +7,6 @@ const NewsletterSignup = () => {
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
   const [errorMessage, setErrorMessage] = useState('');
 
-  // API-Pfad bestimmen basierend auf der Umgebung
-/*  const getApiUrl = () => {
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return isLocalhost ? 'http://localhost:5000/api/newsletter/subscribe' : '/api/newsletter.php';
-  };*/
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
@@ -29,32 +23,26 @@ const NewsletterSignup = () => {
         return;
       }
       
-      // Auf dem Server: Echten API-Call durchführen
+      // Auf dem Server: FormData verwenden für bessere Kompatibilität
       const formData = new FormData();
       formData.append('email', email);
       formData.append('type', type);
       
-      const response = await fetch('/newsletter.php', {
+      // Du kannst weiterhin den bestehenden newsletter.php-Endpunkt verwenden, da er funktioniert
+      // Oder du kannst auf den universellen Handler umstellen:
+      const response = await fetch('/universal-form-handler.php?type=newsletter', {
         method: 'POST',
         body: formData,
       });
       
-      // Versuche, die Antwort zu parsen
-      try {
-        const data = await response.json();
-        
-        if (data.success) {
-          setStatus('success');
-          setEmail('');
-        } else {
-          setStatus('error');
-          setErrorMessage(data.message || 'Ein Fehler ist aufgetreten.');
-        }
-      } catch (jsonError) {
-        // Fehler beim JSON-Parsing
-        console.error('JSON Parsing error:', jsonError);
+      const data = await response.json();
+      
+      if (data.success) {
+        setStatus('success');
+        setEmail('');
+      } else {
         setStatus('error');
-        setErrorMessage('Fehler bei der Verarbeitung der Serverantwort.');
+        setErrorMessage(data.message || 'Ein Fehler ist aufgetreten.');
       }
     } catch (error) {
       setStatus('error');
@@ -134,13 +122,6 @@ const NewsletterSignup = () => {
       {status === 'error' && (
         <div className="mt-4 p-4 bg-red-600 text-white rounded-lg">
           {errorMessage}
-        </div>
-      )}
-      
-      {/* Debug-Informationen - nur im lokalen Modus oder temporär anzeigen */}
-      {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
-        <div className="mt-4 p-2 bg-yellow-600 text-white rounded-lg text-sm">
-          Lokaler Entwicklungsmodus: Daten werden simuliert
         </div>
       )}
     </div>

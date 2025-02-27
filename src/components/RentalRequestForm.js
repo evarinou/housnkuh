@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Check, Send, Loader, X, AlertTriangle } from 'lucide-react';
 
 const RentalRequestForm = ({ spaceType, onClose }) => {
@@ -16,13 +15,6 @@ const RentalRequestForm = ({ spaceType, onClose }) => {
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
   const [errorMessage, setErrorMessage] = useState('');
 
- /* const spaceTypeLabels = {
-    'regal-a': 'Verkaufsblock Lage A (35€/Monat)',
-    'regal-b': 'Verkaufsblock Lage B (15€/Monat)',
-    'kuehl': 'Verkaufsblock gekühlt (50€/Monat)',
-    'tisch': 'Verkaufsblock Tisch (40€/Monat)'
-  };*/
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -34,7 +26,15 @@ const RentalRequestForm = ({ spaceType, onClose }) => {
     setErrorMessage('');
 
     try {
-      // Lokale Entwicklungsumgebung vs. Produktion unterscheiden
+      // FormData für zuverlässigeren Datentransport
+      const formDataObj = new FormData();
+      
+      // Alle Formularfelder hinzufügen
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataObj.append(key, value);
+      });
+
+      // Lokale Entwicklungsumgebung vs. Produktion
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       
       if (isLocal) {
@@ -46,19 +46,24 @@ const RentalRequestForm = ({ spaceType, onClose }) => {
         return;
       }
 
-      // Produktionsumgebung
-      const response = await axios.post('/form-handler.php?type=rental', formData);
+      // Verwende den universellen Form-Handler mit type=rental
+      const response = await fetch('/universal-form-handler.php?type=rental', {
+        method: 'POST',
+        body: formDataObj
+      });
       
-      if (response.data.success) {
+      // Parse JSON-Antwort
+      const data = await response.json();
+      
+      if (data.success) {
         setStatus('success');
       } else {
-        throw new Error(response.data.message || 'Ein Fehler ist aufgetreten.');
+        throw new Error(data.message || 'Ein Fehler ist aufgetreten.');
       }
     } catch (error) {
       console.error('Mietanfrage-Fehler:', error);
       setStatus('error');
       setErrorMessage(
-        error.response?.data?.message || 
         error.message || 
         'Bei der Übermittlung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'
       );
