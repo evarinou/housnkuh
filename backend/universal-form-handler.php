@@ -1,15 +1,21 @@
 <?php
-// Globaler Form-Handler für alle Formulare
-ini_set('display_errors', 0);
+// Grundlegende Fehlerbehandlung für Debugging
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
-ini_set('log_errors', 1);
-ini_set('error_log', 'universal_form_handler_error.log');
 
-// CORS-Header setzen
+// Protokollierung für Fehlersuche
+function logMessage($message) {
+    file_put_contents('form_handler.log', date('Y-m-d H:i:s') . " - $message\n", FILE_APPEND);
+}
+
+// CORS-Header
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+
+// Protokolliere jeden Aufruf
+logMessage("Handler wurde aufgerufen: " . $_SERVER['REQUEST_METHOD']);
 
 // Bei OPTIONS-Anfrage sofort beenden (für CORS Preflight)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -17,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Nur POST-Anfragen akzeptieren
+// Für alle anderen Methoden außer POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
         'success' => false,
@@ -26,182 +32,40 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Log-Funktion für einheitliches Logging
-function logMessage($message) {
-    file_put_contents('form_submissions.log', date('Y-m-d H:i:s') . ": $message\n", FILE_APPEND);
-}
-
-// Protokolliere eingehende Anfrage
-logMessage("Neue Anfrage erhalten");
-
 // Formulartyp aus dem Request ermitteln
 $form_type = isset($_GET['type']) ? $_GET['type'] : 'unknown';
 logMessage("Formulartyp: $form_type");
 
-// Daten aus verschiedenen Quellen extrahieren
-$post_data = $_POST;
-$json_data = json_decode(file_get_contents('php://input'), true) ?: [];
-$data = array_merge($post_data, $json_data);
-
-// Protokolliere die Daten (ohne sensible Informationen)
-logMessage("Daten erhalten: " . json_encode(array_keys($data)));
+// Daten aus dem POST-Request
+$data = $_POST;
+logMessage("Erhaltene POST-Daten: " . json_encode($data));
 
 // E-Mail-Empfänger
 $to = 'eva-maria.schaller@housnkuh.de';
+$email = isset($data['email']) ? $data['email'] : 'keine-email@example.com';
+$name = isset($data['name']) ? $data['name'] : (isset($data['businessName']) ? $data['businessName'] : 'Unbekannt');
+$subject = "Housnkuh: Neue " . ucfirst($form_type) . " Anfrage";
+$message = "Neue Anfrage vom Formular: $form_type\n\n";
 
-// Grundlegende Validierung
-if ($form_type === 'newsletter') {
-    $email = $data['email'] ?? '';
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Bitte geben Sie eine gültige E-Mail-Adresse an.'
-        ]);
-        exit;
+// Nachricht zusammenstellen
+foreach ($data as $key => $value) {
+    if (is_array($value)) {
+        $message .= "$key: " . json_encode($value) . "\n";
+    } else {
+        $message .= "$key: $value\n";
     }
 }
 
-// Daten für universelle Speicherung vorbereiten
-$email = $data['email'] ?? 'keine@angabe.de';
-$name = $data['name'] ?? $data['businessName'] ?? $data['contactPerson'] ?? 'Unbekannt';
-$summary = '';
-
-// E-Mail-Betreff und Inhalt erstellen basierend auf Formulartyp
-switch ($form_type) {
-    case 'contact':
-        $email_subject = "[housnkuh Kontakt] " . ($data['subject'] ?? 'Kontaktanfrage');
-        $email_body = "Name: " . ($data['name'] ?? 'Unbekannt') . "\n";
-        $email_body .= "E-Mail: $email\n";
-        $email_body .= "Telefon: " . ($data['phone'] ?? 'Nicht angegeben') . "\n";
-        $email_body .= "Betreff: " . ($data['subject'] ?? 'Kontaktanfrage') . "\n\n";
-        $email_body .= "Nachricht:\n" . ($data['message'] ?? 'Keine Nachricht') . "\n";
-        $summary = $data['subject'] ?? 'Kontaktanfrage';
-        break;
-        
-    case 'rental':
-        $email_subject = "[housnkuh Mietanfrage] " . ($data['businessName'] ?? 'Unbekannt');
-        $email_body = "Neue Mietanfrage:\n\n";
-        $email_body .= "Firmenname: " . ($data['businessName'] ?? 'Unbekannt') . "\n";
-        $email_body .= "Ansprechpartner: " . ($data['contactPerson'] ?? 'Unbekannt') . "\n";
-        $email_body .= "E-Mail: $email\n";
-        $email_body .= "Telefon: " . ($data['phone'] ?? 'Nicht angegeben') . "\n";
-        $email_body .= "Art der Produkte: " . ($data['productType'] ?? 'Nicht angegeben') . "\n";
-        $email_body .= "Gewünschte Verkaufsfläche: " . ($data['spaceType'] ?? 'Nicht angegeben') . "\n";
-        
-        if (!empty($data['message'])) {
-            $email_body .= "\nNachricht:\n" . $data['message'] . "\n";
-        }
-        $summary = "Mietanfrage: " . ($data['productType'] ?? 'Produkte') . " - " . ($data['spaceType'] ?? 'Fläche');
-        break;
-        
-    case 'newsletter':
-        $email_subject = "[housnkuh Newsletter] Neue Anmeldung";
-        $email_body = "Neue Newsletter-Anmeldung:\n\n";
-        $email_body .= "E-Mail: $email\n";
-        $email_body .= "Typ: " . ($data['type'] ?? 'customer') . "\n";
-        $summary = "Newsletter-Anmeldung: " . ($data['type'] === 'vendor' ? 'Direktvermarkter' : 'Kunde');
-        break;
-        
-    case 'vendor-contest':
-        $email_subject = "[housnkuh Wettbewerb] Neue Teilnahme";
-        $email_body = "Neue Wettbewerbsteilnahme:\n\n";
-        $email_body .= "Name: " . ($data['name'] ?? 'Unbekannt') . "\n";
-        $email_body .= "E-Mail: $email\n";
-        $email_body .= "Telefon: " . ($data['phone'] ?? 'Nicht angegeben') . "\n\n";
-        $email_body .= "Vermutete Direktvermarkter:\n";
-        
-        if (isset($data['guessedVendors']) && is_array($data['guessedVendors'])) {
-            foreach ($data['guessedVendors'] as $index => $vendor) {
-                $email_body .= ($index + 1) . ". $vendor\n";
-            }
-        }
-        $summary = "Wettbewerbsteilnahme";
-        break;
-        
-    default:
-        $email_subject = "[housnkuh Website] Neue Formularanfrage";
-        $email_body = "Neue Anfrage über die Website:\n\n";
-        
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $email_body .= "$key: " . json_encode($value) . "\n";
-            } else {
-                $email_body .= "$key: $value\n";
-            }
-        }
-        $summary = "Generische Formularanfrage";
-        break;
-}
-
-// Versuche die Daten in einer universellen Tabelle zu speichern
-
-try {
-    // Verwende direkt die Konfiguration, die funktioniert
-    $host = '127.0.0.1'; // Dies hat in der Diagnose funktioniert
-    $dbname = 'yhe56tye_housnkuh';
-    $username = 'yhe56tye_eva';
-    $password = 'SherlockHolmes2!';
-    $port = '3307';
-    
-    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4;port=$port";
-    $pdo = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-    logMessage("Datenbankverbindung hergestellt mit 127.0.0.1:3307");
-} catch (PDOException $e) {
-    // Fehler protokollieren, aber weitermachen
-    logMessage("Datenbankfehler: " . $e->getMessage());
-}
-    
-    // Universelle Tabelle erstellen (falls noch nicht vorhanden)
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS all_form_submissions (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            form_type VARCHAR(50) NOT NULL,
-            name VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL,
-            summary TEXT,
-            full_data TEXT,
-            ip_address VARCHAR(45),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ");
-    
-    // Daten als JSON serialisieren (für die vollständige Speicherung)
-    $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE);
-    
-    // In die Datenbank einfügen
-    $stmt = $pdo->prepare("
-        INSERT INTO all_form_submissions 
-        (form_type, name, email, summary, full_data, ip_address)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ");
-    
-    $stmt->execute([
-        $form_type,
-        $name,
-        $email,
-        $summary,
-        $jsonData,
-        $_SERVER['REMOTE_ADDR']
-    ]);
-    
-    logMessage("Daten erfolgreich in Datenbank gespeichert");
-} catch (Exception $e) {
-    // Fehler protokollieren, aber weitermachen
-    logMessage("Datenbankfehler: " . $e->getMessage());
-    // Wir machen trotzdem weiter und versuchen, die E-Mail zu senden
-}
-
-// E-Mail-Header
-$headers = "From: noreply@housnkuh.de\r\n";
-$headers .= "Reply-To: $email\r\n";
-$headers .= "X-Mailer: PHP/" . phpversion();
-
 // E-Mail senden
-$mail_sent = mail($to, $email_subject, $email_body, $headers);
+$headers = "From: webform@housnkuh.de\r\n";
+$headers .= "Reply-To: $email\r\n";
+
+$mail_sent = mail($to, $subject, $message, $headers);
 
 if ($mail_sent) {
     logMessage("E-Mail erfolgreich gesendet");
     
+    // Erfolgsantwort senden
     echo json_encode([
         'success' => true,
         'message' => 'Vielen Dank für Ihre Nachricht! Wir werden uns so schnell wie möglich bei Ihnen melden.'
@@ -209,11 +73,10 @@ if ($mail_sent) {
 } else {
     logMessage("Fehler beim Senden der E-Mail");
     
-    // Wenn die E-Mail fehlschlägt, aber die Datenbankspreichung erfolgreich war,
-    // geben wir trotzdem eine Erfolgsmeldung zurück
+    // Fehlerantwort senden
     echo json_encode([
-        'success' => true,
-        'message' => 'Ihre Anfrage wurde erfolgreich übermittelt. Vielen Dank!'
+        'success' => false,
+        'message' => 'Bei der Übermittlung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'
     ]);
 }
 ?>

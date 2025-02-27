@@ -28,9 +28,8 @@ const NewsletterSignup = () => {
       formData.append('email', email);
       formData.append('type', type);
       
-      // Du kannst weiterhin den bestehenden newsletter.php-Endpunkt verwenden, da er funktioniert
-      // Oder du kannst auf den universellen Handler umstellen:
-      const response = await fetch('/universal-form-handler.php?type=newsletter', {
+      // Da der bestehende newsletter.php funktioniert, verwenden wir ihn weiterhin
+      const response = await fetch('./newsletter.php', {
         method: 'POST',
         body: formData,
       });

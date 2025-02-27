@@ -69,18 +69,29 @@ const VendorContest = () => {
         return;
       }
       
-      // Verwende den universellen Form-Handler
+      // Verwende den vereinfachten Handler
       const response = await fetch('/universal-form-handler.php?type=vendor-contest', {
         method: 'POST',
         body: formDataObj
       });
       
-      const data = await response.json();
+      // Für Debugging
+      const responseText = await response.text();
+      console.log('Server-Antwort:', responseText);
       
-      if (data.success) {
+      // Versuche JSON zu parsen
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON-Parsing-Fehler:', parseError);
+        throw new Error('Ungültige Antwort vom Server erhalten');
+      }
+      
+      if (data && data.success) {
         setStatus('success');
       } else {
-        throw new Error(data.message || 'Ein unbekannter Fehler ist aufgetreten');
+        throw new Error((data && data.message) || 'Ein unbekannter Fehler ist aufgetreten');
       }
     } catch (error) {
       console.error('Fehler beim Absenden:', error);
@@ -99,7 +110,7 @@ const VendorContest = () => {
       <div className="text-center mb-8">
         <p className="text-xl mb-3">Wer wird bei housnkuh dabei sein?</p>
         <p className="text-gray-300">
-          Raten Sie, welche drei Direktvermarkter aus der Region bei unserer Eröffnung im Sommer 2025 
+        Raten Sie, welche drei Direktvermarkter aus der Region bei unserer Eröffnung im Sommer 2025 
           mit ihren Produkten vertreten sein werden. Zu gewinnen gibt es einen 50€-Gutschein!
         </p>
         <p className="text-gray-300 mt-2">

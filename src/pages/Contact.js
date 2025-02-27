@@ -51,16 +51,26 @@ const Contact = () => {
         return;
       }
 
-      // Verwende den universellen Form-Handler mit type=contact
+      // Verwende den vereinfachten Handler
       const response = await fetch('/universal-form-handler.php?type=contact', {
         method: 'POST',
         body: formDataObj
       });
       
-      // Parse JSON-Antwort
-      const data = await response.json();
+      // Für Debugging
+      const responseText = await response.text();
+      console.log('Server-Antwort:', responseText);
       
-      if (data.success) {
+      // Versuche JSON zu parsen, mit Fallback für leere/fehlerhafte Antworten
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON-Parsing-Fehler:', parseError);
+        throw new Error('Ungültige Antwort vom Server erhalten');
+      }
+      
+      if (data && data.success) {
         setStatus('success');
         setFormData({
           name: '',
@@ -70,7 +80,7 @@ const Contact = () => {
           subject: 'Allgemeine Anfrage'
         });
       } else {
-        throw new Error(data.message || 'Ein Fehler ist aufgetreten.');
+        throw new Error((data && data.message) || 'Ein Fehler ist aufgetreten.');
       }
     } catch (error) {
       console.error('Kontaktformular-Fehler:', error);
@@ -182,6 +192,7 @@ const Contact = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
                     />
                   </div>
+
                   <div>
                     <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
                       Betreff
