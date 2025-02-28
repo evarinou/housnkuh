@@ -58,7 +58,7 @@ const Location = () => {
             </LocationFeature>
             
             <LocationFeature icon={Clock} title="Öffnungszeiten">
-              <p className="text-gray-600">24 Stunden täglich</p>
+              <p className="text-gray-600">Erweiterte Öffnungszeiten</p>
               <p className="text-gray-600">7 Tage die Woche</p>
               <p className="text-sm text-gray-500 mt-1">
                 Zugang mit EC- oder Kreditkarte

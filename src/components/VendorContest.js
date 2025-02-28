@@ -110,7 +110,7 @@ const VendorContest = () => {
       <div className="text-center mb-8">
         <p className="text-xl mb-3">Wer wird bei housnkuh dabei sein?</p>
         <p className="text-gray-300">
-        Raten Sie, welche drei Direktvermarkter aus der Region bei unserer Eröffnung im Sommer 2025 
+        Raten Sie, welche drei Direktvermarkter aus der Region bei der Eröffnung im Sommer 2025 
           mit ihren Produkten vertreten sein werden. Zu gewinnen gibt es einen 50€-Gutschein!
         </p>
         <p className="text-gray-300 mt-2">
@@ -234,7 +234,6 @@ const VendorContest = () => {
           <li>Pro Person ist nur eine Teilnahme erlaubt</li>
           <li>Die Gewinner werden per E-Mail benachrichtigt</li>
           <li>Der Rechtsweg ist ausgeschlossen</li>
-          <li>Mitarbeiter von housnkuh und ihre Angehörigen sind von der Teilnahme ausgeschlossen</li>
         </ul>
       </div>
       
