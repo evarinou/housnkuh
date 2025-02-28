@@ -37,7 +37,7 @@ const Location = () => {
     <div className="py-12 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[var(--secondary)] mb-4">Unser Standort</h1>
+          <h1 className="text-4xl font-bold text-[var(--secondary)] mb-4">Der Standort</h1>
           <p className="text-xl text-gray-600">
             Zentral in Kronach – Ihre neue Anlaufstelle für regionale Produkte
           </p>
@@ -70,7 +70,7 @@ const Location = () => {
             </LocationFeature>
             
             <LocationFeature icon={Mail} title="E-Mail">
-              <p className="text-gray-600">evam.schaller@gmail.com</p>
+              <p className="text-gray-600">eva-maria.schaller@housnkuh.de</p>
             </LocationFeature>
 
             <LocationFeature icon={Bus} title="Öffentliche Verkehrsmittel">
