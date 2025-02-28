@@ -71,7 +71,7 @@ const ContestBanner = () => {
         </div>
         
         <p className="mb-4 text-white/90">
-          Nehmen Sie an unserem Wettbewerb teil und gewinnen Sie einen 50€-Gutschein! Welche drei lokalen Produzenten werden bei unserer Eröffnung dabei sein?
+          Nehmen Sie am Wettbewerb teil und gewinnen Sie einen 50€-Gutschein! Welche drei lokalen Produzenten werden bei der Eröffnung dabei sein?
         </p>
         
         <button 

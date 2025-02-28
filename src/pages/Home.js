@@ -3,7 +3,7 @@ import React from 'react';
 import { Calendar, Clock, ShoppingBag, Users, MapPin, Heart } from 'lucide-react';
 import NewsletterSignup from '../components/NewsletterSignup';
 import ConceptGraphic from '../components/ConceptGraphic';
-import VendorContestHighlight from '../components/VendorContestHighlight'; // Import der neuen Komponente
+//import VendorContestHighlight from '../components/VendorContestHighlight'; // Import der neuen Komponente
 import ConstructionBanner from '../components/ConstructionBanner';
 
 // Feature Card Component mit Animation
@@ -99,8 +99,8 @@ const Home = () => {
       {/* NEUES ELEMENT: Construction Banner einfügen */}
       <ConstructionBanner />
 
-      {/* HIER die VendorContestHighlight-Komponente einbinden */}
-      <VendorContestHighlight />
+      {/* HIER die VendorContestHighlight-Komponente einbinden 
+      <VendorContestHighlight />*/}
 
       {/* ConceptGraphic-Komponente */}
       <ConceptGraphic />
