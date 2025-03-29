@@ -31,8 +31,7 @@ const AnimatedListItem = ({ icon: Icon, children }) => {
   );
 };
 
- {/* Instagram Feed hinzufügen - vor dem Newsletter */}
- <InstagramFeed />
+
 
 // History Section mit verbessertem Design – definiere diese Komponente außerhalb von Home
 const HistorySection = () => {
@@ -121,7 +120,8 @@ const Home = () => {
           </p>
         </div>
       </section>
-
+      
+      <InstagramFeed />
       <HistorySection />
 
       {/* Key Features mit Animation */}
