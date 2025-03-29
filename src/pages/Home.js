@@ -5,6 +5,8 @@ import NewsletterSignup from '../components/NewsletterSignup';
 import ConceptGraphic from '../components/ConceptGraphic';
 //import VendorContestHighlight from '../components/VendorContestHighlight'; // Import der neuen Komponente
 import ConstructionBanner from '../components/ConstructionBanner';
+import InstagramFeed from '../components/InstagramFeed'; // Importiere die neue Komponente
+
 
 // Feature Card Component mit Animation
 const FeatureCard = ({ icon: Icon, title, description }) => {
@@ -28,6 +30,9 @@ const AnimatedListItem = ({ icon: Icon, children }) => {
     </li>
   );
 };
+
+ {/* Instagram Feed hinzufügen - vor dem Newsletter */}
+ <InstagramFeed />
 
 // History Section mit verbessertem Design – definiere diese Komponente außerhalb von Home
 const HistorySection = () => {

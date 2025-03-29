@@ -92,3 +92,24 @@
 .animate-slideUp {
   animation: slideUp 1s ease-out;
 }
+
+/* Instagram Widget Styling */
+.instagram-widget-container {
+  position: relative;
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
+}
+
+.lightwidget-widget {
+  border: none !important;
+  width: 100% !important;
+  min-height: 300px; /* Mindesthöhe für das Widget */
+}
+
+/* Responsives Styling fürs Widget */
+@media (max-width: 768px) {
+  .lightwidget-widget {
+    min-height: 400px; /* Angepasste Höhe für mobile Geräte */
+  }
+}

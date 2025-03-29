@@ -18,6 +18,10 @@ if (file_exists($configFile)) {
     require_once $configFile;
     $admin_password = $adminConfig['password'] ?? $admin_password;
 
+ini_set('log_errors', 1);
+ini_set('error_log', 'newsletter_debug.log');
+error_log('Newsletter-Script wurde aufgerufen: ' . date('Y-m-d H:i:s'));
+
 
 // Vorschau des Newsletters generieren
 function previewNewsletter($subject, $content) {
@@ -609,6 +613,10 @@ function personalizeNewsletter($content, $email, $campaign_id) {
  */
 function sendNewsletter($to, $subject, $content) {
     // Erstelle Header für HTML-E-Mail
+    error_log("Versuche Newsletter zu senden an: $to");
+    
+   
+    
     $headers  = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=UTF-8\r\n";
     $headers .= "From: newsletter@housnkuh.de\r\n";
@@ -708,6 +716,8 @@ function sendNewsletter($to, $subject, $content) {
     
     // Sende die E-Mail
     return mail($to, $subject, $htmlMessage, $headers);
+    error_log("Ergebnis des E-Mail-Versands an $to: " . ($result ? "Erfolgreich" : "Fehlgeschlagen"));
+  
 } else {
                     $recipients = [['email' => $test_email, 'type' => 'test']];
                 }
