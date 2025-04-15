@@ -117,9 +117,16 @@ const PackageBuilder = () => {
     return 0;
   };
 
-  // Berechnet die monatlichen Kosten
-  useEffect(() => {
-    const discount = getDiscountRate();
+ // Berechnet die monatlichen Kosten
+useEffect(() => {
+    // Rabatte basierend auf Mietdauer - innerhalb des useEffect definiert
+    const calculateDiscountRate = () => {
+      if (rentalDuration >= 12) return 0.1; // 10% Rabatt
+      if (rentalDuration >= 6) return 0.05; // 5% Rabatt
+      return 0;
+    };
+  
+    const discount = calculateDiscountRate();
     const packageCosts = selectedPackages.reduce((sum, pkg) => {
       const option = packageOptions.find(p => p.id === pkg);
       return sum + (option ? option.price : 0);
