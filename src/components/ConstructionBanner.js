@@ -4,7 +4,7 @@ import { Settings, AlertTriangle, Calendar } from 'lucide-react';
 const ConstructionBanner = () => {
   // Berechnung der verbleibenden Zeit bis zur Eröffnung (ca. Juni 2025)
   const calculateTimeRemaining = () => {
-    const openingDate = new Date('2025-06-01T00:00:00');
+    const openingDate = new Date('2025-08-01T00:00:00');
     const currentDate = new Date();
     
     const totalDays = Math.floor((openingDate - currentDate) / (1000 * 60 * 60 * 24));
